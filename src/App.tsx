@@ -38,11 +38,11 @@ const GlobalLoader = () => (
   <div className="fixed inset-0 bg-white/70 backdrop-blur-md z-[9999] flex flex-col items-center justify-center">
     <div className="relative w-16 h-16">
       {/* Outer spinning ring */}
-      <div className="absolute inset-0 rounded-full border-4 border-[#1B4F8A]/20 border-t-[#1B4F8A] animate-spin" />
+      <div className="absolute inset-0 rounded-full border-4 border-[#107ed8]/20 border-t-[#107ed8] animate-spin" />
       {/* Pulsing overlay */}
-      <div className="absolute inset-3 bg-[#1B4F8A]/10 rounded-full animate-ping" />
+      <div className="absolute inset-3 bg-[#107ed8]/10 rounded-full animate-ping" />
       {/* Core branded dot */}
-      <div className="absolute inset-5 bg-[#1B4F8A] rounded-full shadow-[0_0_12px_rgba(27,79,138,0.4)]" />
+      <div className="absolute inset-5 bg-[#107ed8] rounded-full shadow-[0_0_12px_rgba(27,79,138,0.4)]" />
     </div>
     <h3 className="mt-6 text-lg font-bold text-gray-900 tracking-wider font-sans">VENUEPRO</h3>
     <p className="text-sm text-gray-500 mt-1 font-medium animate-pulse">Setting up your workspace...</p>

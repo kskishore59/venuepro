@@ -64,20 +64,20 @@ export const Bookings: React.FC = () => {
         title="Bookings" 
         description="Manage your banquet bookings, coordinate venue dates, process deposits, and preview client event layouts." 
       />
-      <div className="flex justify-between items-end">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-xl border border-gray-150 shadow-sm">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Bookings & Calendar</h1>
-          <p className="text-gray-500">Manage your hall bookings, events, and schedules.</p>
+          <h1 className="text-lg md:text-2xl font-extrabold text-gray-900 tracking-tight">Bookings & Calendar</h1>
+          <p className="text-gray-500 text-xs md:text-sm mt-0.5">Manage your hall bookings, events, and schedules.</p>
         </div>
         <button 
           onClick={() => { setSelectedDate(new Date()); setDrawerMode('create'); }}
-          className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors shadow-sm font-medium"
+          className="w-full sm:w-auto px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-bold text-xs md:text-sm text-center"
         >
           + New Booking
         </button>
       </div>
 
-      <div className="h-[600px]">
+      <div className="h-[460px] md:h-[600px]">
         <BookingCalendar 
           bookings={bookings} 
           currentDate={currentDate} 

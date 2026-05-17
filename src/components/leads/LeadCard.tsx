@@ -50,7 +50,7 @@ export const LeadCard: React.FC<LeadCardProps> = ({ lead, onClick }) => {
       {...listeners}
       onClick={() => onClick(lead)}
       className={cn(
-        "bg-white p-3 rounded-lg shadow-sm border border-gray-200 cursor-grab active:cursor-grabbing hover:border-primary/50 transition-colors group",
+        "bg-white p-3 rounded-lg shadow-sm border border-gray-200 cursor-grab active:cursor-grabbing hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-md transition-all duration-205 group",
         isDragging && "opacity-50 border-dashed border-2 border-primary"
       )}
     >

@@ -12,7 +12,7 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 211 67% 32%; /* #1B4F8A */
+    --primary: 207 85% 46%; /* #107ed8 */
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -91,16 +91,48 @@
   font-weight: 600;
 }
 .premium-datepicker-popper .react-datepicker__day--selected {
-  background-color: #1B4F8A !important;
+  background-color: #107ed8 !important;
   color: #fff !important;
   border-radius: 8px;
 }
 .premium-datepicker-popper .react-datepicker__day:hover {
   border-radius: 8px;
-  background-color: rgba(27, 79, 138, 0.1);
-  color: #1B4F8A;
+  background-color: rgba(16, 126, 216, 0.1);
+  color: #107ed8;
 }
 .premium-datepicker-popper .react-datepicker__day--keyboard-selected {
   border-radius: 8px;
-  background-color: rgba(27, 79, 138, 0.05);
+  background-color: rgba(16, 126, 216, 0.05);
+}
+
+/* Premium card hover & shadow utilities */
+@layer utilities {
+  .card-elevated {
+    @apply bg-white rounded-xl border border-gray-200/80 shadow-sm;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-elevated:hover {
+    @apply shadow-lg border-primary/15;
+    transform: translateY(-2px);
+  }
+  .card-interactive {
+    @apply bg-white rounded-xl border border-gray-200/80 shadow-sm cursor-pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-interactive:hover {
+    @apply shadow-xl border-primary/25;
+    transform: translateY(-3px) scale(1.005);
+  }
+  .btn-primary {
+    @apply bg-primary text-white font-bold rounded-lg shadow-md shadow-primary/20;
+    transition: all 0.2s ease;
+  }
+  .btn-primary:hover {
+    @apply shadow-lg shadow-primary/30;
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active {
+    transform: translateY(0) scale(0.98);
+  }
 }

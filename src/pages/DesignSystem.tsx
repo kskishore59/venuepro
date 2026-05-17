@@ -15,10 +15,10 @@ const FONT_PRESETS = [
 
 const COLOR_PRESETS = [
   { 
-    name: 'Midnight Corporate', 
-    primary: '211 67% 32%', // #1B4F8A
+    name: 'Ocean Corporate', 
+    primary: '207 85% 46%', // #107ed8
     accent: '221 83% 53%', // #2563EB
-    hexPrimary: '#1B4F8A',
+    hexPrimary: '#107ed8',
     hexAccent: '#2563EB',
     desc: 'The executive professional standard ideal for general B2B events.' 
   },

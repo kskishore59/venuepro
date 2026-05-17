@@ -103,14 +103,14 @@ export const Leads: React.FC = () => {
         title="Leads CRM" 
         description="Track event inquiries, client walkthroughs, conversion pipelines, and sales notes in your CRM." 
       />
-      <div className="flex justify-between items-end">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-xl border border-gray-150 shadow-sm">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Leads & CRM</h1>
-          <p className="text-gray-500">Manage inquiries, follow-ups, and sales pipeline.</p>
+          <h1 className="text-lg md:text-2xl font-extrabold text-gray-900 tracking-tight">Leads & CRM</h1>
+          <p className="text-gray-500 text-xs md:text-sm mt-0.5">Manage inquiries, follow-ups, and sales pipeline.</p>
         </div>
         
-        <div className="flex items-center space-x-3">
-          <div className="flex bg-gray-100 p-0.5 rounded-lg border border-gray-200 shadow-sm">
+        <div className="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-start">
+          <div className="flex bg-gray-100 p-0.5 rounded-lg border border-gray-200 shadow-sm shrink-0">
             <button 
               onClick={() => setViewMode('board')} 
               className={`p-1.5 rounded-md flex items-center transition-all ${
@@ -133,29 +133,29 @@ export const Leads: React.FC = () => {
 
           <button 
             onClick={() => { setSelectedLead(null); setDrawerMode('create'); }}
-            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors shadow-sm font-medium"
+            className="flex-1 sm:flex-initial px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-bold text-xs md:text-sm text-center"
           >
             + New Lead
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-          <p className="text-sm font-medium text-gray-500">Total Leads (Month)</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{isLoading ? '...' : totalLeads}</p>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+        <div className="bg-white p-3.5 md:p-4 rounded-xl shadow-sm border border-gray-200/80">
+          <p className="text-[10px] md:text-sm font-bold text-gray-400 uppercase tracking-wider">Total Leads</p>
+          <p className="text-xl md:text-2xl font-extrabold text-gray-900 mt-1">{isLoading ? '...' : totalLeads}</p>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-          <p className="text-sm font-medium text-gray-500">Conversion Rate</p>
-          <p className="text-2xl font-bold text-green-600 mt-1">{isLoading ? '...' : `${conversionRate}%`}</p>
+        <div className="bg-white p-3.5 md:p-4 rounded-xl shadow-sm border border-gray-200/80">
+          <p className="text-[10px] md:text-sm font-bold text-gray-400 uppercase tracking-wider">Conversions</p>
+          <p className="text-xl md:text-2xl font-extrabold text-green-600 mt-1">{isLoading ? '...' : `${conversionRate}%`}</p>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-          <p className="text-sm font-medium text-gray-500">Avg. Deal Size</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{isLoading ? '...' : formatCurrency(avgDealSize)}</p>
+        <div className="bg-white p-3.5 md:p-4 rounded-xl shadow-sm border border-gray-200/80">
+          <p className="text-[10px] md:text-sm font-bold text-gray-400 uppercase tracking-wider">Avg Deal Size</p>
+          <p className="text-xl md:text-2xl font-extrabold text-gray-900 mt-1 truncate max-w-[100px] sm:max-w-none">{isLoading ? '...' : formatCurrency(avgDealSize)}</p>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-          <p className="text-sm font-medium text-gray-500">Follow-ups Today</p>
-          <p className="text-2xl font-bold text-orange-600 mt-1">{isLoading ? '...' : followUpsToday}</p>
+        <div className="bg-white p-3.5 md:p-4 rounded-xl shadow-sm border border-gray-200/80">
+          <p className="text-[10px] md:text-sm font-bold text-gray-400 uppercase tracking-wider">Follow-ups</p>
+          <p className="text-xl md:text-2xl font-extrabold text-orange-600 mt-1">{isLoading ? '...' : followUpsToday}</p>
         </div>
       </div>
 

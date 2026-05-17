@@ -3,17 +3,18 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import { 
   Building2, Calendar, 
-  TrendingUp, Globe, Sparkles, Trash2, Edit3 
+  TrendingUp, Globe, Sparkles, Trash2, Edit3, Upload 
 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
 import { toast } from 'sonner';
 import { SEO } from '../components/ui/SEO';
 import { Drawer } from '../components/ui/Drawer';
+import { DataImport } from '../components/import/DataImport';
 
 // Mock system-wide analytics styled like Google Analytics 4 Dashboard
 const MOCK_REALTIME_USERS = 37;
 const MOCK_ACTIVE_BREAKDOWN = [
-  { device: 'Desktop', percentage: 65, color: '#1B4F8A' },
+  { device: 'Desktop', percentage: 65, color: '#107ed8' },
   { device: 'Mobile', percentage: 28, color: '#2563EB' },
   { device: 'Tablet', percentage: 7, color: '#10B981' }
 ];
@@ -218,14 +219,14 @@ export const SuperAdmin: React.FC = () => {
                   <AreaChart data={MOCK_REVENUE_METRICS}>
                     <defs>
                       <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#1B4F8A" stopOpacity={0.2}/>
-                        <stop offset="95%" stopColor="#1B4F8A" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="#107ed8" stopOpacity={0.2}/>
+                        <stop offset="95%" stopColor="#107ed8" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
                     <XAxis dataKey="month" stroke="#94a3b8" fontSize={12} tickLine={false} />
                     <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} tickFormatter={(val) => `₹${val/100000}L`} />
                     <Tooltip formatter={(val: any) => `₹${val.toLocaleString('en-IN')}`} />
-                    <Area type="monotone" dataKey="value" stroke="#1B4F8A" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
+                    <Area type="monotone" dataKey="value" stroke="#107ed8" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -454,6 +455,18 @@ export const SuperAdmin: React.FC = () => {
           </div>
         </div>
       </Drawer>
+
+      {/* Data Import Section for Super Admin */}
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center space-x-2">
+          <Upload className="w-4 h-4 text-primary" />
+          <h3 className="font-bold text-sm text-gray-800">System Data Import</h3>
+        </div>
+        <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <DataImport type="leads" />
+          <DataImport type="bookings" />
+        </div>
+      </div>
     </div>
   );
 };

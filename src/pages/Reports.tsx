@@ -14,7 +14,7 @@ import {
 import { format, parseISO, subDays } from 'date-fns';
 import { SEO } from '../components/ui/SEO';
 
-const COLORS = ['#1B4F8A', '#2563EB', '#10B981', '#F59E0B', '#EF4444'];
+const COLORS = ['#107ed8', '#2563EB', '#10B981', '#F59E0B', '#EF4444'];
 
 export const Reports: React.FC = () => {
   const { organization } = useAuth();
@@ -211,14 +211,14 @@ export const Reports: React.FC = () => {
               <AreaChart data={acquisitionData}>
                 <defs>
                   <linearGradient id="colorAcq" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#1B4F8A" stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor="#1B4F8A" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#107ed8" stopOpacity={0.2}/>
+                    <stop offset="95%" stopColor="#107ed8" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} tickLine={false} />
                 <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} tickFormatter={(val) => `₹${val/1000}`} />
                 <Tooltip formatter={(val: any) => `₹${val.toLocaleString('en-IN')}`} />
-                <Area type="monotone" dataKey="revenue" stroke="#1B4F8A" strokeWidth={3} fillOpacity={1} fill="url(#colorAcq)" />
+                <Area type="monotone" dataKey="revenue" stroke="#107ed8" strokeWidth={3} fillOpacity={1} fill="url(#colorAcq)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>

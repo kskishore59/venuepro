@@ -6,9 +6,10 @@ import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
 import { 
   Save, Building, CreditCard, Shield, Users, 
-  AlertOctagon, Check, X 
+  AlertOctagon, Check, X, Upload 
 } from 'lucide-react';
 import { SEO } from '../components/ui/SEO';
+import { DataImport } from '../components/import/DataImport';
 
 // Default matrix for role permissions
 const DEFAULT_PERMISSIONS = {
@@ -20,7 +21,7 @@ const DEFAULT_PERMISSIONS = {
 export const Settings: React.FC = () => {
   const { organization } = useAuth();
   const queryClient = useQueryClient();
-  const [activePanel, setActivePanel] = useState<'profile' | 'security' | 'staff'>('profile');
+  const [activePanel, setActivePanel] = useState<'profile' | 'security' | 'staff' | 'import'>('profile');
 
   const { register, handleSubmit, reset, watch, setValue } = useForm({
     defaultValues: organization || {}
@@ -167,7 +168,8 @@ export const Settings: React.FC = () => {
           {[
             { id: 'profile', label: 'Organization Profile', icon: Building },
             { id: 'security', label: 'Access & Role Matrix', icon: Shield },
-            { id: 'staff', label: 'Venue Staff Assignments', icon: Users }
+            { id: 'staff', label: 'Venue Staff Assignments', icon: Users },
+            { id: 'import', label: 'Import Previous Data', icon: Upload }
           ].map(item => {
             const Icon = item.icon;
             return (
@@ -527,16 +529,36 @@ export const Settings: React.FC = () => {
             )}
 
             {/* Sticky Action Footer */}
-            <div className="flex justify-end pt-4 border-t border-gray-200">
-              <button
-                type="submit"
-                disabled={updateSettings.isPending}
-                className="flex items-center px-6 py-2.5 bg-primary text-white rounded-xl font-bold hover:bg-primary/95 transition-all shadow-md shadow-primary/10 hover:shadow-lg"
-              >
-                <Save className="w-4 h-4 mr-2" /> 
-                {updateSettings.isPending ? 'Saving Configurations...' : 'Save Configuration Changes'}
-              </button>
-            </div>
+            {activePanel !== 'import' && (
+              <div className="flex justify-end pt-4 border-t border-gray-200">
+                <button
+                  type="submit"
+                  disabled={updateSettings.isPending}
+                  className="btn-primary flex items-center px-6 py-2.5 text-sm"
+                >
+                  <Save className="w-4 h-4 mr-2" /> 
+                  {updateSettings.isPending ? 'Saving Configurations...' : 'Save Configuration Changes'}
+                </button>
+              </div>
+            )}
+
+            {/* PANEL 4: DATA IMPORT */}
+            {activePanel === 'import' && (
+              <div className="space-y-6">
+                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                    <h3 className="font-bold text-sm text-gray-800">Import Previous Data</h3>
+                    <p className="text-xs text-gray-500 mt-0.5">Migrate your existing leads and bookings from Excel sheets or CSV files.</p>
+                  </div>
+                  <div className="p-6 space-y-8">
+                    <DataImport type="leads" />
+                    <div className="border-t border-gray-200 pt-8">
+                      <DataImport type="bookings" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </form>
         </div>
 

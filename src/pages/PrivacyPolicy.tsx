@@ -7,7 +7,7 @@ export const PrivacyPolicy: React.FC = () => {
     <div className="min-h-screen bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white border border-gray-200/80 rounded-2xl shadow-xl overflow-hidden">
         {/* Header Branding */}
-        <div className="p-8 bg-[#1B4F8A] text-white flex justify-between items-center relative overflow-hidden">
+        <div className="p-8 bg-[#107ed8] text-white flex justify-between items-center relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1),transparent)] pointer-events-none" />
           <div className="space-y-1 z-10">
             <Link to="/" className="inline-flex items-center text-white/80 hover:text-white text-xs font-semibold uppercase tracking-wider mb-2 transition-colors">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { formatCurrency } from '../lib/utils';
@@ -26,6 +27,30 @@ const DashboardSkeleton = () => (
     </div>
   </div>
 );
+
+// High-fidelity spring animations variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 15 },
+  show: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { 
+      type: "spring" as const, 
+      stiffness: 120, 
+      damping: 16 
+    } 
+  }
+};
 
 export const Dashboard: React.FC = () => {
   const { organization, profile } = useAuth();
@@ -94,7 +119,12 @@ export const Dashboard: React.FC = () => {
     .slice(0, 5);
 
   return (
-    <div className="space-y-6">
+    <motion.div 
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="space-y-6"
+    >
       <SEO 
         title="Dashboard Overview" 
         description="Unified corporate multi-tenant command dashboard tracking live leads, invoice payments, and synchronized schedules." 
@@ -102,7 +132,10 @@ export const Dashboard: React.FC = () => {
 
       {/* Warm Welcome and helpers flow for new venue onboarding */}
       {dashboardData?.venuesCount === 0 && (
-        <div className="bg-gradient-to-r from-primary to-blue-800 text-white rounded-2xl p-6 md:p-8 shadow-lg relative overflow-hidden">
+        <motion.div 
+          variants={itemVariants}
+          className="bg-gradient-to-r from-primary to-blue-800 text-white rounded-2xl p-6 md:p-8 shadow-lg relative overflow-hidden"
+        >
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none" />
           <div className="space-y-4 relative z-10">
             <div className="inline-flex items-center space-x-2 px-3 py-1 bg-white/10 rounded-full text-xs font-semibold uppercase tracking-wider">
@@ -114,143 +147,179 @@ export const Dashboard: React.FC = () => {
               We are absolutely thrilled to partner with your team! Let's get your venue operations completely configured. Follow these 4 easy steps to start coordinate slot bookings:
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-              <Link to="/venues" className="bg-white/10 hover:bg-white/15 border border-white/15 p-4 rounded-xl transition-all flex flex-col justify-between h-36">
-                <div>
-                  <span className="text-xs font-bold text-white/50">STEP 1</span>
-                  <h4 className="font-bold text-sm mt-1">Add Venue & Halls</h4>
-                  <p className="text-xs text-white/70 mt-1">Configure pricing models, slots, and capacity thresholds.</p>
-                </div>
-                <span className="text-xs font-bold flex items-center text-white mt-2">Setup Properties <ChevronRight className="w-3 h-3 ml-1" /></span>
-              </Link>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+              <motion.div whileHover={{ y: -3, scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+                <Link to="/venues" className="bg-white/10 hover:bg-white/15 border border-white/15 p-4 rounded-xl transition-all flex flex-col justify-between h-36">
+                  <div>
+                    <span className="text-xs font-bold text-white/50">STEP 1</span>
+                    <h4 className="font-bold text-sm mt-1">Add Venue & Halls</h4>
+                    <p className="text-xs text-white/70 mt-1">Configure pricing models, slots, and capacity thresholds.</p>
+                  </div>
+                  <span className="text-xs font-bold flex items-center text-white mt-2">Setup Properties <ChevronRight className="w-3 h-3 ml-1" /></span>
+                </Link>
+              </motion.div>
               
-              <Link to="/settings" className="bg-white/10 hover:bg-white/15 border border-white/15 p-4 rounded-xl transition-all flex flex-col justify-between h-36">
-                <div>
-                  <span className="text-xs font-bold text-white/50">STEP 2</span>
-                  <h4 className="font-bold text-sm mt-1">Map Cleanliness Staff</h4>
-                  <p className="text-xs text-white/70 mt-1">Add Managers and Turnaround Staff to specific halls.</p>
-                </div>
-                <span className="text-xs font-bold flex items-center text-white mt-2">Map Staff <ChevronRight className="w-3 h-3 ml-1" /></span>
-              </Link>
+              <motion.div whileHover={{ y: -3, scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+                <Link to="/settings" className="bg-white/10 hover:bg-white/15 border border-white/15 p-4 rounded-xl transition-all flex flex-col justify-between h-36">
+                  <div>
+                    <span className="text-xs font-bold text-white/50">STEP 2</span>
+                    <h4 className="font-bold text-sm mt-1">Map Cleanliness Staff</h4>
+                    <p className="text-xs text-white/70 mt-1">Add Managers and Turnaround Staff to specific halls.</p>
+                  </div>
+                  <span className="text-xs font-bold flex items-center text-white mt-2">Map Staff <ChevronRight className="w-3 h-3 ml-1" /></span>
+                </Link>
+              </motion.div>
 
-              <Link to="/settings" className="bg-white/10 hover:bg-white/15 border border-white/15 p-4 rounded-xl transition-all flex flex-col justify-between h-36">
-                <div>
-                  <span className="text-xs font-bold text-white/50">STEP 3</span>
-                  <h4 className="font-bold text-sm mt-1">Bilingual GST Setup</h4>
-                  <p className="text-xs text-white/70 mt-1">Configure English & Hindi invoicing rules and SAC codes.</p>
-                </div>
-                <span className="text-xs font-bold flex items-center text-white mt-2">Setup Billing <ChevronRight className="w-3 h-3 ml-1" /></span>
-              </Link>
+              <motion.div whileHover={{ y: -3, scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+                <Link to="/settings" className="bg-white/10 hover:bg-white/15 border border-white/15 p-4 rounded-xl transition-all flex flex-col justify-between h-36">
+                  <div>
+                    <span className="text-xs font-bold text-white/50">STEP 3</span>
+                    <h4 className="font-bold text-sm mt-1">Bilingual GST Setup</h4>
+                    <p className="text-xs text-white/70 mt-1">Configure English & Hindi invoicing rules and SAC codes.</p>
+                  </div>
+                  <span className="text-xs font-bold flex items-center text-white mt-2">Setup Billing <ChevronRight className="w-3 h-3 ml-1" /></span>
+                </Link>
+              </motion.div>
 
-              <Link to="/leads" className="bg-white/10 hover:bg-white/15 border border-white/15 p-4 rounded-xl transition-all flex flex-col justify-between h-36">
-                <div>
-                  <span className="text-xs font-bold text-white/50">STEP 4</span>
-                  <h4 className="font-bold text-sm mt-1">Track First Inquiry</h4>
-                  <p className="text-xs text-white/70 mt-1">Create leads dynamically in your automated CRM board.</p>
-                </div>
-                <span className="text-xs font-bold flex items-center text-white mt-2">Log Inquiry <ChevronRight className="w-3 h-3 ml-1" /></span>
-              </Link>
+              <motion.div whileHover={{ y: -3, scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+                <Link to="/leads" className="bg-white/10 hover:bg-white/15 border border-white/15 p-4 rounded-xl transition-all flex flex-col justify-between h-36">
+                  <div>
+                    <span className="text-xs font-bold text-white/50">STEP 4</span>
+                    <h4 className="font-bold text-sm mt-1">Track First Inquiry</h4>
+                    <p className="text-xs text-white/70 mt-1">Create leads dynamically in your automated CRM board.</p>
+                  </div>
+                  <span className="text-xs font-bold flex items-center text-white mt-2">Log Inquiry <ChevronRight className="w-3 h-3 ml-1" /></span>
+                </Link>
+              </motion.div>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* Header featuring Date Range selector */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm gap-4">
+      <motion.div 
+        variants={itemVariants}
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 md:p-6 rounded-xl md:rounded-2xl border border-gray-200/80 shadow-sm gap-4"
+      >
         <div>
-          <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">Dashboard Overview</h1>
-          <p className="text-gray-500 text-sm mt-0.5">Real-time indicators synchronized directly from operational database records.</p>
+          <h1 className="text-lg md:text-2xl font-extrabold text-gray-900 tracking-tight">Dashboard Overview</h1>
+          <p className="text-gray-500 text-xs md:text-sm mt-0.5">Real-time indicators synchronized directly from database records.</p>
         </div>
 
         {/* Date Filter selector */}
-        <div className="flex items-center space-x-2 bg-gray-50 border border-gray-200 rounded-xl p-1.5 shadow-sm">
-          <CalendarDays className="w-4 h-4 text-gray-400 ml-2" />
+        <div className="flex items-center space-x-2 bg-gray-50 border border-gray-200 rounded-xl p-1.5 shadow-sm w-full sm:w-auto justify-between sm:justify-start">
+          <div className="flex items-center">
+            <CalendarDays className="w-4 h-4 text-gray-400 ml-2" />
+            <span className="text-xs font-bold text-gray-400 ml-1.5 sm:hidden">Filter:</span>
+          </div>
           <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value as any)}
-            className="bg-transparent text-sm font-semibold text-gray-700 focus:outline-none pr-3 py-1 cursor-pointer"
+            className="bg-transparent text-xs sm:text-sm font-semibold text-gray-700 focus:outline-none pr-3 py-0.5 cursor-pointer"
           >
             <option value="7d">Last 7 Days</option>
             <option value="30d">Last 30 Days</option>
             <option value="all">All Time</option>
           </select>
         </div>
-      </div>
+      </motion.div>
 
-      {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* KPI Cards Grid - compact 2-columns on mobile with premium slide in */}
+      <motion.div 
+        variants={containerVariants}
+        className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4"
+      >
         
         {/* Bookings */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm">
+        <motion.div 
+          variants={itemVariants}
+          whileHover={{ y: -3, scale: 1.015, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.05)" }}
+          className="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl border border-gray-200/80 shadow-sm flex flex-col justify-between transition-colors hover:border-primary/20 cursor-pointer"
+        >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Bookings</p>
-              <p className="text-3xl font-extrabold text-gray-900 mt-1">{bookingsCount}</p>
+              <p className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider">Bookings</p>
+              <p className="text-xl md:text-3xl font-extrabold text-gray-900 mt-0.5 md:mt-1">{bookingsCount}</p>
             </div>
-            <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center">
-              <CalendarIcon className="w-5 h-5" />
+            <div className="w-9 h-9 md:w-12 md:h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center shrink-0">
+              <CalendarIcon className="w-4.5 h-4.5 md:w-5 md:h-5" />
             </div>
           </div>
-          <div className="mt-4 flex items-center text-xs text-gray-400 font-medium">
+          <div className="mt-3 md:mt-4 flex items-center text-[10px] md:text-xs text-gray-400 font-medium border-t border-gray-50 pt-2">
             <span className="font-bold text-green-600 mr-1">Active</span>
-            <span>in selected window</span>
+            <span className="truncate">in window</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Revenue */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm">
+        <motion.div 
+          variants={itemVariants}
+          whileHover={{ y: -3, scale: 1.015, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.05)" }}
+          className="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl border border-gray-200/80 shadow-sm flex flex-col justify-between transition-colors hover:border-primary/20 cursor-pointer"
+        >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Acquired Advances</p>
-              <p className="text-3xl font-extrabold text-gray-900 mt-1">{formatCurrency(totalRevenue)}</p>
+              <p className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider">Advances</p>
+              <p className="text-xl md:text-3xl font-extrabold text-gray-900 mt-0.5 md:mt-1 truncate max-w-[100px] sm:max-w-none">{formatCurrency(totalRevenue)}</p>
             </div>
-            <div className="w-12 h-12 bg-green-50 text-green-600 rounded-full flex items-center justify-center">
-              <TrendingUp className="w-5 h-5" />
+            <div className="w-9 h-9 md:w-12 md:h-12 bg-green-50 text-green-600 rounded-full flex items-center justify-center shrink-0">
+              <TrendingUp className="w-4.5 h-4.5 md:w-5 md:h-5" />
             </div>
           </div>
-          <div className="mt-4 flex items-center text-xs text-gray-400 font-medium">
+          <div className="mt-3 md:mt-4 flex items-center text-[10px] md:text-xs text-gray-400 font-medium border-t border-gray-50 pt-2">
             <span className="font-bold text-green-600 mr-1">Received</span>
-            <span>aggregate sums</span>
+            <span className="truncate">sums</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Pending payments */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm">
+        <motion.div 
+          variants={itemVariants}
+          whileHover={{ y: -3, scale: 1.015, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.05)" }}
+          className="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl border border-gray-200/80 shadow-sm flex flex-col justify-between transition-colors hover:border-primary/20 cursor-pointer"
+        >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Pending Balances</p>
-              <p className="text-3xl font-extrabold text-gray-900 mt-1">{formatCurrency(pendingPaymentsTotal)}</p>
+              <p className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider">Balances</p>
+              <p className="text-xl md:text-3xl font-extrabold text-gray-900 mt-0.5 md:mt-1 truncate max-w-[100px] sm:max-w-none">{formatCurrency(pendingPaymentsTotal)}</p>
             </div>
-            <div className="w-12 h-12 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center">
-              <CreditCard className="w-5 h-5" />
+            <div className="w-9 h-9 md:w-12 md:h-12 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center shrink-0">
+              <CreditCard className="w-4.5 h-4.5 md:w-5 md:h-5" />
             </div>
           </div>
-          <div className="mt-4 flex items-center text-xs text-gray-400 font-medium">
-            <span>Across <span className="font-bold text-gray-700">{pendingBookingsWithBalance.length}</span> outstanding bookings</span>
+          <div className="mt-3 md:mt-4 flex items-center text-[10px] md:text-xs text-gray-400 font-medium border-t border-gray-50 pt-2">
+            <span className="truncate">Across <span className="font-bold text-gray-700">{pendingBookingsWithBalance.length}</span> bills</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Events this week */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm">
+        <motion.div 
+          variants={itemVariants}
+          whileHover={{ y: -3, scale: 1.015, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.05)" }}
+          className="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl border border-gray-200/80 shadow-sm flex flex-col justify-between transition-colors hover:border-primary/20 cursor-pointer"
+        >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Events This Week</p>
-              <p className="text-3xl font-extrabold text-gray-900 mt-1">{eventsThisWeek.length}</p>
+              <p className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider">Weekly Events</p>
+              <p className="text-xl md:text-3xl font-extrabold text-gray-900 mt-0.5 md:mt-1">{eventsThisWeek.length}</p>
             </div>
-            <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center">
-              <Building2 className="w-5 h-5" />
+            <div className="w-9 h-9 md:w-12 md:h-12 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center shrink-0">
+              <Building2 className="w-4.5 h-4.5 md:w-5 md:h-5" />
             </div>
           </div>
-          <div className="mt-4 flex items-center text-xs text-gray-400 font-medium">
+          <div className="mt-3 md:mt-4 flex items-center text-[10px] md:text-xs text-gray-400 font-medium border-t border-gray-50 pt-2">
             <span className="font-bold text-purple-600 mr-1">{todaysEvents.length}</span>
-            <span>happening today</span>
+            <span className="truncate">today</span>
           </div>
-        </div>
+        </motion.div>
 
-      </div>
+      </motion.div>
 
       {/* Main Operational Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <motion.div 
+        variants={itemVariants}
+        className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+      >
         
         {/* Upcoming Bookings Agenda (Replaced Calendar) */}
         <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden flex flex-col justify-between">
@@ -258,21 +327,20 @@ export const Dashboard: React.FC = () => {
             <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <CalendarIcon className="w-4 h-4 text-primary" />
-                <h3 className="font-bold text-gray-900 text-sm uppercase tracking-wider">Upcoming Bookings Agenda</h3>
+                <h3 className="font-extrabold text-sm text-gray-800 tracking-tight">Upcoming Banquet Schedules</h3>
               </div>
-              <Link 
-                to="/bookings" 
-                className="text-xs font-bold text-primary hover:text-primary/90 flex items-center bg-primary/5 px-3 py-1.5 rounded-lg border border-primary/10 transition-colors"
-              >
-                <span>View All Bookings</span>
-                <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
-              </Link>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Link to="/bookings" className="text-xs font-extrabold text-primary hover:text-primary-dark transition-colors flex items-center">
+                  View All Bookings <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                </Link>
+              </motion.div>
             </div>
 
             <div className="overflow-x-auto">
               {upcomingBookings.length === 0 ? (
-                <div className="p-8 text-center text-gray-400 text-sm italic">
-                  No upcoming bookings found in the database.
+                <div className="p-12 text-center text-gray-400 font-medium text-sm">
+                  <CalendarIcon className="w-12 h-12 mx-auto text-gray-250 mb-3" />
+                  No upcoming slot bookings listed.
                 </div>
               ) : (
                 <table className="w-full text-left border-collapse">
@@ -326,66 +394,59 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="space-y-6">
-          
-          {/* Today's Events list */}
-          <div className="bg-white rounded-2xl border border-gray-200/80 shadow-sm">
-            <div className="p-4 border-b border-gray-100 bg-gray-50/50">
-              <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Today's Schedule</h2>
+        {/* Live Leads CRM column */}
+        <div className="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden flex flex-col justify-between">
+          <div>
+            <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <TrendingUp className="w-4 h-4 text-primary" />
+                <h3 className="font-extrabold text-sm text-gray-800 tracking-tight">Recent CRM Leads</h3>
+              </div>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Link to="/leads" className="text-xs font-extrabold text-primary hover:text-primary-dark transition-colors flex items-center">
+                  Open CRM Board <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                </Link>
+              </motion.div>
             </div>
-            <div className="p-0">
-              {todaysEvents.length === 0 ? (
-                <div className="p-6 text-center text-gray-400 text-xs italic">No event bookings scheduled for today.</div>
-              ) : (
-                <ul className="divide-y divide-gray-100">
-                  {todaysEvents.map((event: any) => (
-                    <li key={event.id} className="p-4 hover:bg-gray-50/50 transition-colors">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <p className="font-bold text-gray-900 text-sm">{event.customers?.name || 'Unknown'}'s {event.event_type}</p>
-                          <p className="text-xs text-gray-500 mt-0.5">{event.halls?.name}</p>
-                        </div>
-                        <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-100 capitalize">
-                          {event.status}
-                        </span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
 
-          {/* Recent Leads list */}
-          <div className="bg-white rounded-2xl border border-gray-200/80 shadow-sm">
-            <div className="p-4 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
-              <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Active Leads Intake</h2>
-            </div>
-            <div className="p-0">
+            <div className="divide-y divide-gray-100">
               {dashboardData?.recentLeads.length === 0 ? (
-                <div className="p-6 text-center text-gray-400 text-xs italic">No recent incoming leads found.</div>
+                <div className="p-12 text-center text-gray-400 font-medium text-sm">
+                  No active sales inquiries.
+                </div>
               ) : (
-                <ul className="divide-y divide-gray-100">
-                  {dashboardData?.recentLeads.map((lead: any) => (
-                    <li key={lead.id} className="p-4 hover:bg-gray-50/50 transition-colors flex items-center justify-between text-sm">
-                      <div>
-                        <p className="font-bold text-gray-900">{lead.name}</p>
-                        <p className="text-xs text-gray-400 mt-0.5">{format(new Date(lead.created_at), 'dd/MM/yyyy')}</p>
-                      </div>
-                      <span className="px-2 py-0.5 text-xs font-semibold rounded bg-gray-100 text-gray-700 border capitalize">
-                        {lead.status?.replace('_', ' ')}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                dashboardData?.recentLeads.map((l: any) => (
+                  <motion.div 
+                    key={l.id} 
+                    whileHover={{ x: 3, backgroundColor: "rgba(249, 250, 251, 0.5)" }}
+                    className="p-4 flex items-center justify-between transition-all"
+                  >
+                    <div>
+                      <p className="font-bold text-gray-900 text-sm">{l.name}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">{l.phone} • {l.event_type || 'General'}</p>
+                    </div>
+                    <span className={`px-2.5 py-0.5 text-[10px] font-bold rounded-full border capitalize ${
+                      l.status === 'new' 
+                        ? 'bg-blue-50 text-blue-700 border-blue-100' 
+                        : l.status === 'negotiating'
+                        ? 'bg-purple-50 text-purple-700 border-purple-100'
+                        : 'bg-gray-50 text-gray-700 border-gray-100'
+                    }`}>
+                      {l.status}
+                    </span>
+                  </motion.div>
+                ))
               )}
             </div>
           </div>
 
+          <div className="p-4 border-t border-gray-100 bg-gray-50/20 text-center">
+            <p className="text-xs text-gray-400">Track inquiries automatically in real-time CRM pipelines.</p>
+          </div>
         </div>
 
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 export default Dashboard;
