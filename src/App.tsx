@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { DashboardLayout } from './components/layout/DashboardLayout';
 
 // Lazy load pages for premium modularized bundling and lazy loading experience
@@ -49,6 +49,14 @@ const GlobalLoader = () => (
   </div>
 );
 
+const SuperAdminGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { profile } = useAuth();
+  if (!profile || (profile.role as string) !== 'super_admin') {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return <>{children}</>;
+};
+
 function App() {
   useEffect(() => {
     const savedFont = localStorage.getItem('venuepro-brand-font') || "'Outfit', 'Inter', sans-serif";
@@ -82,7 +90,7 @@ function App() {
                 <Route path="/venues" element={<Venues />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/settings" element={<Settings />} />
-                <Route path="/super-admin" element={<SuperAdmin />} />
+                <Route path="/super-admin" element={<SuperAdminGuard><SuperAdmin /></SuperAdminGuard>} />
                 <Route path="/design-system" element={<DesignSystem />} />
               </Route>
 

@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { formatCurrency } from '../lib/utils';
 import { 
   Calendar as CalendarIcon, CreditCard, Building2, 
-  TrendingUp, CalendarDays 
+  TrendingUp, CalendarDays, ArrowRight, Sparkles, 
+  ChevronRight
 } from 'lucide-react';
 import { format, isToday, subDays, startOfWeek, endOfWeek } from 'date-fns';
 import { SEO } from '../components/ui/SEO';
-import { BookingCalendar } from '../components/bookings/BookingCalendar';
 import type { Booking } from '../types';
 
 const DashboardSkeleton = () => (
@@ -27,25 +28,26 @@ const DashboardSkeleton = () => (
 );
 
 export const Dashboard: React.FC = () => {
-  const { organization } = useAuth();
+  const { organization, profile } = useAuth();
   const [dateRange, setDateRange] = useState<'7d' | '30d' | 'all'>('30d');
-  const [currentDate, setCurrentDate] = useState(new Date());
 
   const { data: dashboardData, isLoading } = useQuery({
     queryKey: ['dashboard', organization?.id],
     queryFn: async () => {
       if (!organization?.id) return null;
       
-      const [bookingsRes, paymentsRes, leadsRes] = await Promise.all([
+      const [bookingsRes, paymentsRes, leadsRes, venuesRes] = await Promise.all([
         supabase.from('bookings').select('*, halls(name), customers(name)').eq('org_id', organization.id),
         supabase.from('bookings').select('balance_amount, event_date').eq('org_id', organization.id),
-        supabase.from('leads').select('*').eq('org_id', organization.id).order('created_at', { ascending: false }).limit(5)
+        supabase.from('leads').select('*').eq('org_id', organization.id).order('created_at', { ascending: false }).limit(5),
+        supabase.from('venues').select('id').eq('org_id', organization.id)
       ]);
 
       return {
         bookings: (bookingsRes.data || []) as Booking[],
         pendingBookings: (paymentsRes.data || []) as { balance_amount: number, event_date: string }[],
-        recentLeads: leadsRes.data || []
+        recentLeads: leadsRes.data || [],
+        venuesCount: venuesRes.data?.length || 0
       };
     },
     enabled: !!organization?.id
@@ -57,7 +59,7 @@ export const Dashboard: React.FC = () => {
   let filterDateLimit = subDays(now, 30);
   if (dateRange === '7d') filterDateLimit = subDays(now, 7);
 
-  // 1. Dynamic Live Date Filtering for KPI Blocks
+  // Dynamic Live Date Filtering for KPI Blocks
   const filteredBookings = (dashboardData?.bookings || []).filter(b => {
     if (dateRange === 'all') return true;
     return new Date(b.event_date) >= filterDateLimit;
@@ -85,12 +87,73 @@ export const Dashboard: React.FC = () => {
 
   const todaysEvents = (dashboardData?.bookings || []).filter(e => isToday(new Date(e.event_date))) || [];
 
+  // Sort and filter upcoming bookings for agenda display
+  const upcomingBookings = (dashboardData?.bookings || [])
+    .filter(b => new Date(b.event_date) >= new Date())
+    .sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime())
+    .slice(0, 5);
+
   return (
     <div className="space-y-6">
       <SEO 
         title="Dashboard Overview" 
         description="Unified corporate multi-tenant command dashboard tracking live leads, invoice payments, and synchronized schedules." 
       />
+
+      {/* Warm Welcome and helpers flow for new venue onboarding */}
+      {dashboardData?.venuesCount === 0 && (
+        <div className="bg-gradient-to-r from-primary to-blue-800 text-white rounded-2xl p-6 md:p-8 shadow-lg relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="space-y-4 relative z-10">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-white/10 rounded-full text-xs font-semibold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 animate-pulse" />
+              <span>Getting Started Guide</span>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">Warm Welcome to VenuePro, {profile?.full_name}! 🏰</h2>
+            <p className="text-white/80 text-sm max-w-2xl leading-relaxed">
+              We are absolutely thrilled to partner with your team! Let's get your venue operations completely configured. Follow these 4 easy steps to start coordinate slot bookings:
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+              <Link to="/venues" className="bg-white/10 hover:bg-white/15 border border-white/15 p-4 rounded-xl transition-all flex flex-col justify-between h-36">
+                <div>
+                  <span className="text-xs font-bold text-white/50">STEP 1</span>
+                  <h4 className="font-bold text-sm mt-1">Add Venue & Halls</h4>
+                  <p className="text-xs text-white/70 mt-1">Configure pricing models, slots, and capacity thresholds.</p>
+                </div>
+                <span className="text-xs font-bold flex items-center text-white mt-2">Setup Properties <ChevronRight className="w-3 h-3 ml-1" /></span>
+              </Link>
+              
+              <Link to="/settings" className="bg-white/10 hover:bg-white/15 border border-white/15 p-4 rounded-xl transition-all flex flex-col justify-between h-36">
+                <div>
+                  <span className="text-xs font-bold text-white/50">STEP 2</span>
+                  <h4 className="font-bold text-sm mt-1">Map Cleanliness Staff</h4>
+                  <p className="text-xs text-white/70 mt-1">Add Managers and Turnaround Staff to specific halls.</p>
+                </div>
+                <span className="text-xs font-bold flex items-center text-white mt-2">Map Staff <ChevronRight className="w-3 h-3 ml-1" /></span>
+              </Link>
+
+              <Link to="/settings" className="bg-white/10 hover:bg-white/15 border border-white/15 p-4 rounded-xl transition-all flex flex-col justify-between h-36">
+                <div>
+                  <span className="text-xs font-bold text-white/50">STEP 3</span>
+                  <h4 className="font-bold text-sm mt-1">Bilingual GST Setup</h4>
+                  <p className="text-xs text-white/70 mt-1">Configure English & Hindi invoicing rules and SAC codes.</p>
+                </div>
+                <span className="text-xs font-bold flex items-center text-white mt-2">Setup Billing <ChevronRight className="w-3 h-3 ml-1" /></span>
+              </Link>
+
+              <Link to="/leads" className="bg-white/10 hover:bg-white/15 border border-white/15 p-4 rounded-xl transition-all flex flex-col justify-between h-36">
+                <div>
+                  <span className="text-xs font-bold text-white/50">STEP 4</span>
+                  <h4 className="font-bold text-sm mt-1">Track First Inquiry</h4>
+                  <p className="text-xs text-white/70 mt-1">Create leads dynamically in your automated CRM board.</p>
+                </div>
+                <span className="text-xs font-bold flex items-center text-white mt-2">Log Inquiry <ChevronRight className="w-3 h-3 ml-1" /></span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Header featuring Date Range selector */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm gap-4">
@@ -186,18 +249,81 @@ export const Dashboard: React.FC = () => {
 
       </div>
 
-      {/* Main Interactive Grid */}
+      {/* Main Operational Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* Fully Interactive Booking Calendar component */}
-        <div className="lg:col-span-2 flex flex-col">
-          <BookingCalendar 
-            bookings={dashboardData?.bookings || []} 
-            currentDate={currentDate} 
-            setCurrentDate={setCurrentDate} 
-            onDateClick={() => {}} 
-            onBookingClick={() => {}} 
-          />
+        {/* Upcoming Bookings Agenda (Replaced Calendar) */}
+        <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden flex flex-col justify-between">
+          <div>
+            <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <CalendarIcon className="w-4 h-4 text-primary" />
+                <h3 className="font-bold text-gray-900 text-sm uppercase tracking-wider">Upcoming Bookings Agenda</h3>
+              </div>
+              <Link 
+                to="/bookings" 
+                className="text-xs font-bold text-primary hover:text-primary/90 flex items-center bg-primary/5 px-3 py-1.5 rounded-lg border border-primary/10 transition-colors"
+              >
+                <span>View All Bookings</span>
+                <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+              </Link>
+            </div>
+
+            <div className="overflow-x-auto">
+              {upcomingBookings.length === 0 ? (
+                <div className="p-8 text-center text-gray-400 text-sm italic">
+                  No upcoming bookings found in the database.
+                </div>
+              ) : (
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-gray-100 text-xs font-semibold text-gray-400 uppercase bg-gray-50/20">
+                      <th className="px-6 py-3.5">Customer / Contact</th>
+                      <th className="px-6 py-3.5">Date & Slot</th>
+                      <th className="px-6 py-3.5">Hall Name</th>
+                      <th className="px-6 py-3.5">Status</th>
+                      <th className="px-6 py-3.5 text-right">Balance Due</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 text-sm">
+                    {upcomingBookings.map(b => (
+                      <tr key={b.id} className="hover:bg-gray-50/30 transition-colors">
+                        <td className="px-6 py-4">
+                          <p className="font-bold text-gray-900">{b.customers?.name || 'Walk-in Client'}</p>
+                          <p className="text-xs text-gray-400 mt-0.5">{b.customers?.phone || 'No phone'}</p>
+                        </td>
+                        <td className="px-6 py-4">
+                          <p className="font-medium text-gray-700">{format(new Date(b.event_date), 'dd MMM yyyy')}</p>
+                          <p className="text-xs text-gray-400 mt-0.5 capitalize">{b.start_time ? `${b.start_time.slice(0, 5)} - ${b.end_time?.slice(0, 5)}` : 'Full Day'}</p>
+                        </td>
+                        <td className="px-6 py-4 text-gray-600 font-semibold">
+                          {b.halls?.name || 'Main Hall'}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`px-2.5 py-0.5 text-xs font-bold rounded-full border capitalize ${
+                            b.status === 'confirmed' 
+                              ? 'bg-green-50 text-green-700 border-green-100' 
+                              : b.status === 'hold'
+                              ? 'bg-blue-50 text-blue-700 border-blue-100'
+                              : 'bg-yellow-50 text-yellow-700 border-yellow-100'
+                          }`}>
+                            {b.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-right font-bold text-gray-900">
+                          {formatCurrency((b.total_amount || 0) - (b.advance_amount || 0))}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+          
+          <div className="p-4 border-t border-gray-100 bg-gray-50/20 text-center">
+            <p className="text-xs text-gray-400">Showing top 5 upcoming banquet and slot schedules.</p>
+          </div>
         </div>
 
         <div className="space-y-6">

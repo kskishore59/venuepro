@@ -47,7 +47,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         <ul className="space-y-1 px-2">
           {[
             ...navItems,
-            { icon: ShieldAlert, label: 'Super Admin', path: '/super-admin' }
+            ...((profile?.role as string) === 'super_admin' ? [{ icon: ShieldAlert, label: 'Super Admin', path: '/super-admin' }] : [])
           ].map((item) => (
             <li key={item.path}>
               <NavLink

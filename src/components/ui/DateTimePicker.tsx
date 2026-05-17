@@ -29,6 +29,9 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         minDate={minDate}
         placeholderText={placeholderText}
         dateFormat="dd MMM yyyy"
+        showMonthDropdown
+        showYearDropdown
+        dropdownMode="select"
         className={`w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm bg-white transition-all ${className}`}
         wrapperClassName="w-full"
         popperClassName="premium-datepicker-popper"
