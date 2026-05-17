@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 
 export const Venues: React.FC = () => {
   const { organization } = useAuth();
-  const [drawerMode, setDrawerMode] = useState<'none'|'add_venue'>('none');
+  const [drawerMode, setDrawerMode] = useState<'none' | 'add_venue'>('none');
   const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
 
   const { data: venues = [], isLoading: loadingVenues } = useQuery({
@@ -53,7 +53,7 @@ export const Venues: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">Venues & Halls</h1>
           <p className="text-gray-500">Manage your properties, halls, amenities, and pricing.</p>
         </div>
-        <button 
+        <button
           onClick={() => setDrawerMode('add_venue')}
           className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors shadow-sm"
         >
@@ -78,10 +78,10 @@ export const Venues: React.FC = () => {
             const venueHalls = allHalls.filter(h => h.venue_id === venue.id);
             const venueHallIds = venueHalls.map(h => h.id);
             const todayCount = todayBookings.filter(b => venueHallIds.includes(b.hall_id)).length;
-            
+
             return (
-              <div 
-                key={venue.id} 
+              <div
+                key={venue.id}
                 onClick={() => setSelectedVenue(venue)}
                 className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-all cursor-pointer group"
               >

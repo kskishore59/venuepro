@@ -17,7 +17,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema)
   });
@@ -31,7 +31,7 @@ export const Login: React.FC = () => {
       });
 
       if (error) throw error;
-      
+
       toast.success('Successfully logged in');
       navigate('/dashboard');
     } catch (error: any) {
@@ -43,16 +43,16 @@ export const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <SEO 
-        title="Sign In" 
-        description="Sign in to your VenuePro dashboard to manage your banquet halls, event bookings, client leads, and payment records." 
+      <SEO
+        title="Sign In"
+        description="Sign in to your VenuePro dashboard to manage your banquet halls, event bookings, client leads, and payment records."
         keywords="venuepro, venue management, banquet software, event management, CRM, bookings"
       />
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="w-12 h-12 bg-primary rounded-xl mx-auto flex items-center justify-center">
           <span className="text-white font-bold text-2xl">V</span>
         </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
           Sign in to VenuePro
         </h2>
       </div>
@@ -104,7 +104,7 @@ export const Login: React.FC = () => {
               </button>
             </div>
           </form>
-          
+
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-300" /></div>
@@ -117,7 +117,7 @@ export const Login: React.FC = () => {
                 Create an account
               </Link>
             </div>
-            
+
             <div className="mt-8 text-center text-xs text-gray-400 space-x-3">
               <Link to="/privacy" className="hover:underline hover:text-gray-600 transition-colors">Privacy Policy</Link>
               <span>•</span>

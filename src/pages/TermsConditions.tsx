@@ -13,7 +13,7 @@ export const TermsConditions: React.FC = () => {
             <Link to="/" className="inline-flex items-center text-white/80 hover:text-white text-xs font-semibold uppercase tracking-wider mb-2 transition-colors">
               <ArrowLeft className="w-3.5 h-3.5 mr-1" /> Back to Dashboard
             </Link>
-            <h1 className="text-3xl font-extrabold tracking-tight">Terms & Conditions</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Terms & Conditions</h1>
             <p className="text-white/80 text-sm">Last updated: May 17, 2026</p>
           </div>
           <Scale className="w-16 h-16 text-white/20 z-10 hidden sm:block" />
@@ -64,8 +64,8 @@ export const TermsConditions: React.FC = () => {
           <section className="space-y-3">
             <h2 className="text-xl font-bold text-gray-900">5. Limitation of Liability</h2>
             <p>
-              VenuePro delivers state-of-the-art software systems but does not guarantee uninterrupted operational hosting. 
-              Under no circumstances shall we be held liable for losses resulting from event cancellations, guest limit disputes, 
+              VenuePro delivers state-of-the-art software systems but does not guarantee uninterrupted operational hosting.
+              Under no circumstances shall we be held liable for losses resulting from event cancellations, guest limit disputes,
               local internet failures, or incorrect database entries made by your operators.
             </p>
           </section>
@@ -73,7 +73,7 @@ export const TermsConditions: React.FC = () => {
           <section className="space-y-3 pt-6 border-t border-gray-200">
             <h2 className="text-lg font-bold text-gray-900">6. Dispute Jurisdiction</h2>
             <p className="text-sm leading-relaxed">
-              These terms are governed by the laws of the Republic of India. Any disputes, claims, or actions originating from 
+              These terms are governed by the laws of the Republic of India. Any disputes, claims, or actions originating from
               use of VenuePro shall be submitted to the exclusive jurisdiction of the state courts in **Bangalore, Karnataka, India**.
             </p>
           </section>

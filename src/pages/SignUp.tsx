@@ -20,7 +20,7 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 export const SignUp: React.FC = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const { register, handleSubmit, formState: { errors } } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema)
   });
@@ -44,7 +44,7 @@ export const SignUp: React.FC = () => {
 
       // Real app might trigger Edge Function to create org & profile securely
       // For this test we assume trigger or client-side creation logic if RLS permits
-      
+
       toast.success('Account created successfully!');
       navigate('/dashboard');
     } catch (error: any) {
@@ -56,13 +56,13 @@ export const SignUp: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <SEO 
-        title="Sign Up" 
-        description="Register your banquet hall or event space business with VenuePro to scale your sales, automate scheduling, and accept client deposits." 
+      <SEO
+        title="Sign Up"
+        description="Register your banquet hall or event space business with VenuePro to scale your sales, automate scheduling, and accept client deposits."
         keywords="venue register, register venue, banquet hall registration, event management software account"
       />
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
           Create your account
         </h2>
       </div>
@@ -135,7 +135,7 @@ export const SignUp: React.FC = () => {
               </button>
             </div>
           </form>
-          
+
           <div className="mt-6 text-center">
             <Link to="/login" className="font-medium text-primary hover:text-primary/80">
               Already have an account? Sign in

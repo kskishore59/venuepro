@@ -14,7 +14,7 @@ import { SEO } from '../components/ui/SEO';
 export const Bookings: React.FC = () => {
   const { organization } = useAuth();
   const [currentDate, setCurrentDate] = useState(new Date());
-  
+
   const [drawerMode, setDrawerMode] = useState<'none' | 'create' | 'view' | 'edit'>('none');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
@@ -60,16 +60,16 @@ export const Bookings: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <SEO 
-        title="Bookings" 
-        description="Manage your banquet bookings, coordinate venue dates, process deposits, and preview client event layouts." 
+      <SEO
+        title="Bookings"
+        description="Manage your banquet bookings, coordinate venue dates, process deposits, and preview client event layouts."
       />
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-xl border border-gray-150 shadow-sm">
         <div>
-          <h1 className="text-lg md:text-2xl font-extrabold text-gray-900 tracking-tight">Bookings & Calendar</h1>
+          <h1 className="text-lg md:text-2xl font-bold text-gray-900 tracking-tight">Bookings & Calendar</h1>
           <p className="text-gray-500 text-xs md:text-sm mt-0.5">Manage your hall bookings, events, and schedules.</p>
         </div>
-        <button 
+        <button
           onClick={() => { setSelectedDate(new Date()); setDrawerMode('create'); }}
           className="w-full sm:w-auto px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-bold text-xs md:text-sm text-center"
         >
@@ -78,9 +78,9 @@ export const Bookings: React.FC = () => {
       </div>
 
       <div className="h-[460px] md:h-[600px]">
-        <BookingCalendar 
-          bookings={bookings} 
-          currentDate={currentDate} 
+        <BookingCalendar
+          bookings={bookings}
+          currentDate={currentDate}
           setCurrentDate={setCurrentDate}
           onDateClick={handleDateClick}
           onBookingClick={handleBookingClick}
@@ -89,14 +89,14 @@ export const Bookings: React.FC = () => {
 
       <BookingList bookings={bookings} onBookingClick={handleBookingClick} />
 
-      <Drawer 
-        isOpen={drawerMode === 'create' || drawerMode === 'edit'} 
-        onClose={() => setDrawerMode('none')} 
+      <Drawer
+        isOpen={drawerMode === 'create' || drawerMode === 'edit'}
+        onClose={() => setDrawerMode('none')}
         title={drawerMode === 'create' ? "Create New Booking" : "Edit Booking"}
         size="lg"
       >
-        <BookingForm 
-          initialDate={selectedDate} 
+        <BookingForm
+          initialDate={selectedDate}
           bookingId={drawerMode === 'edit' && activeBooking ? activeBooking.id : undefined}
           initialValues={drawerMode === 'edit' && activeBooking ? {
             customer_id: activeBooking.customer_id,
@@ -116,19 +116,19 @@ export const Bookings: React.FC = () => {
           onClose={() => {
             if (drawerMode === 'edit') setDrawerMode('view');
             else setDrawerMode('none');
-          }} 
+          }}
         />
       </Drawer>
 
-      <Drawer 
-        isOpen={drawerMode === 'view'} 
-        onClose={() => { setDrawerMode('none'); setSelectedBooking(null); }} 
+      <Drawer
+        isOpen={drawerMode === 'view'}
+        onClose={() => { setDrawerMode('none'); setSelectedBooking(null); }}
         title="Booking Details"
         size="xl"
       >
         {activeBooking && (
-          <BookingDetail 
-            booking={activeBooking} 
+          <BookingDetail
+            booking={activeBooking}
             onEdit={() => setDrawerMode('edit')}
           />
         )}

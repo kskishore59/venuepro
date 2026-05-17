@@ -49,7 +49,7 @@ export const Payments: React.FC = () => {
     enabled: !!organization?.id
   });
 
-  const filteredPayments = payments.filter(p => 
+  const filteredPayments = payments.filter(p =>
     p.bookings?.booking_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.bookings?.customers?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -59,7 +59,7 @@ export const Payments: React.FC = () => {
     .reduce((sum, p) => sum + p.amount, 0);
 
   const pendingCollections = dueBookings.reduce((sum, b) => sum + b.balance_amount, 0);
-  
+
   const overdueBookings = dueBookings.filter(b => isBefore(new Date(b.event_date), new Date())).length;
 
   const handleSendReminder = (booking: any) => {
@@ -80,7 +80,7 @@ export const Payments: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">Payments & Finance</h1>
           <p className="text-gray-500">Track all incoming payments, pending dues, and invoices.</p>
         </div>
-        <button 
+        <button
           onClick={() => setIsAddingPayment(true)}
           className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors flex items-center"
         >
@@ -119,9 +119,9 @@ export const Payments: React.FC = () => {
             <div className="p-4 border-b flex justify-between items-center bg-gray-50">
               <div className="relative w-96">
                 <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input 
-                  type="text" 
-                  placeholder="Search by customer or booking #" 
+                <input
+                  type="text"
+                  placeholder="Search by customer or booking #"
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
                   className="pl-10 w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border py-2"
@@ -176,11 +176,10 @@ export const Payments: React.FC = () => {
               {dueBookings.map(booking => {
                 const isOverdue = isBefore(new Date(booking.event_date), new Date());
                 const isDueSoon = !isOverdue && isBefore(new Date(booking.event_date), addDays(new Date(), 3));
-                
+
                 return (
-                  <div key={booking.id} className={`p-4 rounded-lg border shadow-sm flex items-start justify-between ${
-                    isOverdue ? 'bg-red-50 border-red-100' : isDueSoon ? 'bg-yellow-50 border-yellow-100' : 'bg-white'
-                  }`}>
+                  <div key={booking.id} className={`p-4 rounded-lg border shadow-sm flex items-start justify-between ${isOverdue ? 'bg-red-50 border-red-100' : isDueSoon ? 'bg-yellow-50 border-yellow-100' : 'bg-white'
+                    }`}>
                     <div>
                       <div className="flex items-center space-x-2">
                         <h3 className="font-bold text-gray-900">{booking.booking_number}</h3>
@@ -191,7 +190,7 @@ export const Payments: React.FC = () => {
                       <p className="text-sm text-gray-600 mt-1">Event: {format(new Date(booking.event_date), 'dd MMM yyyy')}</p>
                       <p className="text-sm font-bold text-orange-600 mt-2">Balance Due: {formatCurrency(booking.balance_amount)}</p>
                     </div>
-                    
+
                     <div className="flex flex-col space-y-2">
                       <button onClick={() => handleSendReminder(booking)} className="flex items-center justify-center px-3 py-1.5 bg-green-600 text-white rounded text-sm hover:bg-green-700">
                         <MessageCircle className="w-4 h-4 mr-1" /> Remind

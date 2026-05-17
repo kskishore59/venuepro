@@ -4,9 +4,9 @@ import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
-import { 
-  Save, Building, CreditCard, Shield, Users, 
-  AlertOctagon, Check, X, Upload 
+import {
+  Save, Building, CreditCard, Shield, Users,
+  AlertOctagon, Check, X, Upload
 } from 'lucide-react';
 import { SEO } from '../components/ui/SEO';
 import { DataImport } from '../components/import/DataImport';
@@ -91,7 +91,7 @@ export const Settings: React.FC = () => {
   const onboardStaff = useMutation({
     mutationFn: async (payload: { email: string, full_name: string }) => {
       const { data, error } = await supabase.from('profiles').insert({
-        id: crypto.randomUUID(), 
+        id: crypto.randomUUID(),
         org_id: organization!.id,
         role: 'staff',
         full_name: payload.full_name
@@ -156,13 +156,13 @@ export const Settings: React.FC = () => {
       <SEO title="System Settings" description="Configure organization profile, Indian GST tax schedules, role-based permission grids, and venue staff mappings." />
 
       <div>
-        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">System Configuration</h1>
+        <h1 className="text-3xl font-bold text-gray-900 tracking-tight">System Configuration</h1>
         <p className="text-gray-500 mt-1">Configure multi-tenant structures, role permission matrices, cleanliness mappings, and automated abuse parameters.</p>
       </div>
 
       {/* Main Settings Body */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        
+
         {/* Sidebar Nav */}
         <div className="space-y-1 bg-white p-3 rounded-2xl border border-gray-200 shadow-sm h-fit">
           {[
@@ -176,11 +176,10 @@ export const Settings: React.FC = () => {
               <button
                 key={item.id}
                 onClick={() => setActivePanel(item.id as any)}
-                className={`w-full flex items-center space-x-3 px-4 py-2.5 text-sm font-semibold rounded-xl transition-all ${
-                  activePanel === item.id 
-                    ? 'bg-primary/10 text-primary' 
+                className={`w-full flex items-center space-x-3 px-4 py-2.5 text-sm font-semibold rounded-xl transition-all ${activePanel === item.id
+                    ? 'bg-primary/10 text-primary'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                }`}
+                  }`}
               >
                 <Icon className="w-4 h-4" />
                 <span>{item.label}</span>
@@ -192,11 +191,11 @@ export const Settings: React.FC = () => {
         {/* Content Form Panels */}
         <div className="lg:col-span-3">
           <form onSubmit={handleSubmit((d) => updateSettings.mutate(d))} className="space-y-6">
-            
+
             {/* PANEL 1: PROFILE & BANKING */}
             {activePanel === 'profile' && (
               <div className="space-y-6 animate-fadeIn">
-                
+
                 {/* Org Info */}
                 <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
                   <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center">
@@ -276,7 +275,7 @@ export const Settings: React.FC = () => {
             {/* PANEL 2: SECURITY & ROLE MATRIX */}
             {activePanel === 'security' && (
               <div className="space-y-6 animate-fadeIn">
-                
+
                 {/* Access Control matrix */}
                 <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
                   <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
@@ -286,12 +285,12 @@ export const Settings: React.FC = () => {
                     </div>
                     <span className="px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-100 text-xs rounded font-bold uppercase tracking-wider">Dynamic</span>
                   </div>
-                  
+
                   <div className="p-6 overflow-x-auto">
                     <p className="text-sm text-gray-500 mb-6 leading-relaxed">
                       Custom permissions define what actions employees can initiate across the dashboard. Click checkboxes inside the table below to toggle rules dynamically.
                     </p>
-                    
+
                     <table className="w-full text-left text-sm border border-gray-100 rounded-xl overflow-hidden">
                       <thead className="bg-gray-50/80 border-b border-gray-100">
                         <tr>
@@ -319,11 +318,10 @@ export const Settings: React.FC = () => {
                                   <button
                                     type="button"
                                     onClick={() => handlePermissionToggle(role, perm.id)}
-                                    className={`w-6 h-6 rounded-md flex items-center justify-center border mx-auto transition-all ${
-                                      isChecked 
-                                        ? 'bg-primary border-primary text-white scale-110 shadow-sm' 
+                                    className={`w-6 h-6 rounded-md flex items-center justify-center border mx-auto transition-all ${isChecked
+                                        ? 'bg-primary border-primary text-white scale-110 shadow-sm'
                                         : 'border-gray-300 hover:border-gray-400 bg-white'
-                                    }`}
+                                      }`}
                                   >
                                     {isChecked && <Check className="w-3.5 h-3.5" />}
                                   </button>
@@ -372,20 +370,20 @@ export const Settings: React.FC = () => {
             {/* PANEL 3: VENUE STAFF ASSIGNMENT */}
             {activePanel === 'staff' && (
               <div className="space-y-6 animate-fadeIn">
-                
+
                 {/* Onboard Team Member Card */}
                 <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
                   <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center">
                     <Users className="w-5 h-5 text-primary mr-2" />
                     <h3 className="font-bold text-gray-900">Onboard & Invite Team Members</h3>
                   </div>
-                  
+
                   <div className="p-6">
                     <p className="text-sm text-gray-500 mb-4">
                       Create operational credentials to invite managers, coordinators, or cleanliness staff to log into the VenuePro system.
                     </p>
-                    
-                    <form 
+
+                    <form
                       onSubmit={(e) => {
                         e.preventDefault();
                         const formData = new FormData(e.currentTarget);
@@ -420,19 +418,19 @@ export const Settings: React.FC = () => {
                     </form>
                   </div>
                 </div>
-                
+
                 {/* Assignment Creator Form */}
                 <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
                   <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center">
                     <Users className="w-5 h-5 text-primary mr-2" />
                     <h3 className="font-bold text-gray-900">Map Staff Members to Specific Venues/Halls</h3>
                   </div>
-                  
+
                   <div className="p-6">
                     <p className="text-sm text-gray-500 mb-6">
                       Define direct accountability by assigning specialized operators (Managers, Cleanliness Heads, etc.) to coordinate individual halls.
                     </p>
-                    
+
                     <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
                       <form onSubmit={handleAddAssignment} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                         <div>
@@ -483,7 +481,7 @@ export const Settings: React.FC = () => {
                       {staffAssignments.length} active assignments
                     </span>
                   </div>
-                  
+
                   {staffAssignments.length === 0 ? (
                     <div className="p-8 text-center text-gray-400 text-sm italic">
                       No venue staff mappings defined yet. Add an assignment above to allocate staff roles.
@@ -506,7 +504,7 @@ export const Settings: React.FC = () => {
                                 </p>
                               </div>
                             </div>
-                            
+
                             <div className="flex items-center space-x-3">
                               <span className="px-3 py-1 bg-purple-50 text-purple-700 border border-purple-100 text-xs rounded-full font-bold">
                                 {assignment.customRole}
@@ -536,7 +534,7 @@ export const Settings: React.FC = () => {
                   disabled={updateSettings.isPending}
                   className="btn-primary flex items-center px-6 py-2.5 text-sm"
                 >
-                  <Save className="w-4 h-4 mr-2" /> 
+                  <Save className="w-4 h-4 mr-2" />
                   {updateSettings.isPending ? 'Saving Configurations...' : 'Save Configuration Changes'}
                 </button>
               </div>

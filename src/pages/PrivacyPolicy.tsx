@@ -13,7 +13,7 @@ export const PrivacyPolicy: React.FC = () => {
             <Link to="/" className="inline-flex items-center text-white/80 hover:text-white text-xs font-semibold uppercase tracking-wider mb-2 transition-colors">
               <ArrowLeft className="w-3.5 h-3.5 mr-1" /> Back to Dashboard
             </Link>
-            <h1 className="text-3xl font-extrabold tracking-tight">Privacy Policy</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Privacy Policy</h1>
             <p className="text-white/80 text-sm">Last updated: May 17, 2026</p>
           </div>
           <ShieldCheck className="w-16 h-16 text-white/20 z-10 hidden sm:block" />
@@ -99,7 +99,7 @@ export const PrivacyPolicy: React.FC = () => {
           <section className="space-y-3">
             <h2 className="text-xl font-bold text-gray-900">5. Data Retention & Isolation</h2>
             <p>
-              Data is segmented and securely isolated inside dedicated Postgres schemas with Postgres **Row Level Security (RLS)** active. 
+              Data is segmented and securely isolated inside dedicated Postgres schemas with Postgres **Row Level Security (RLS)** active.
               We retain personal data for only as long as necessary to fulfill business services and complete mandatory tax Audits under Indian legislation.
             </p>
           </section>

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { 
-  DndContext, DragOverlay, closestCorners, KeyboardSensor, 
+import {
+  DndContext, DragOverlay, closestCorners, KeyboardSensor,
   PointerSensor, useSensor, useSensors, useDroppable
 } from '@dnd-kit/core';
 import type { DragStartEvent, DragOverEvent, DragEndEvent } from '@dnd-kit/core';
@@ -33,8 +33,8 @@ interface DroppableColumnProps {
 const DroppableColumn: React.FC<DroppableColumnProps> = ({ id, className, children }) => {
   const { setNodeRef, isOver } = useDroppable({ id });
   return (
-    <div 
-      ref={setNodeRef} 
+    <div
+      ref={setNodeRef}
       className={`${className} transition-colors duration-200 ${isOver ? 'bg-primary/5 border border-dashed border-primary/30' : ''}`}
     >
       {children}
@@ -96,9 +96,9 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ leads, onLeadMove, onL
 
   return (
     <div className="flex h-[calc(100vh-16rem)] overflow-x-auto pb-4 gap-4">
-      <DndContext 
-        sensors={sensors} 
-        collisionDetection={closestCorners} 
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
@@ -109,7 +109,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ leads, onLeadMove, onL
               {col.title}
               <span className="bg-white/50 px-2 py-0.5 rounded-full text-xs">{columnsWithLeads[col.id].length}</span>
             </div>
-            
+
             <DroppableColumn id={col.id} className="flex-1 p-3 overflow-y-auto">
               {/* @ts-ignore */}
               <SortableContext id={col.id} items={columnsWithLeads[col.id].map(l => l.id)} strategy={verticalListSortingStrategy}>
@@ -124,7 +124,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ leads, onLeadMove, onL
         ))}
 
         <DragOverlay>
-          {activeLead ? <LeadCard lead={activeLead} onClick={() => {}} /> : null}
+          {activeLead ? <LeadCard lead={activeLead} onClick={() => { }} /> : null}
         </DragOverlay>
       </DndContext>
     </div>

@@ -142,7 +142,7 @@ export const LandingPage: React.FC = () => {
           </motion.div>
 
           <div className="pt-4 border-t border-gray-900/65 flex flex-col sm:flex-row gap-3 items-center justify-center lg:justify-start text-[10px] font-semibold text-gray-500 uppercase tracking-wider">
-            <span className="flex items-center"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 mr-1.5 shrink-0" /> Trusted by 500+ Indian Venues</span>
+            <span className="flex items-center"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 mr-1.5 shrink-0" /> Most Trusted Software For Venues</span>
             <span className="flex items-center"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 mr-1.5 shrink-0" /> Free Data Migration Support</span>
           </div>
         </div>
@@ -214,7 +214,7 @@ export const LandingPage: React.FC = () => {
       <section id="pain" className="py-12 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 border-t border-gray-900/60 relative">
         <div className="text-center max-w-2xl mx-auto space-y-2 mb-10 sm:mb-16">
           <span className="text-primary text-[10px] sm:text-xs font-bold uppercase tracking-widest">The Problem</span>
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-white">Manual Venue Management is a Nightmare</h3>
+          <h3 className="text-2xl sm:text-3xl font-bold text-white">Manual Venue Management is a Nightmare</h3>
           <p className="text-gray-500 text-xs sm:text-sm">Juggling channels, leaking revenue, and coordinate checkout errors lead to business friction.</p>
         </div>
 
@@ -375,7 +375,7 @@ export const LandingPage: React.FC = () => {
       <section className="py-12 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 border-t border-gray-900/60 relative">
         <div className="text-center max-w-2xl mx-auto space-y-2 mb-10 sm:mb-16">
           <span className="text-primary text-[10px] sm:text-xs font-bold uppercase tracking-widest">Perfect for Every Venue</span>
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-white">VenuePro Adapts to Your Business</h3>
+          <h3 className="text-2xl sm:text-3xl font-bold text-white">VenuePro Adapts to Your Business</h3>
           <p className="text-gray-500 text-xs sm:text-sm">Whether you run a single hall or a chain of resorts, we've got you covered.</p>
         </div>
 
@@ -405,7 +405,7 @@ export const LandingPage: React.FC = () => {
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto space-y-2 mb-10 sm:mb-16">
             <span className="text-primary text-[10px] sm:text-xs font-bold uppercase tracking-widest">Getting Started</span>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-white">From Signup to Going Live</h3>
+            <h3 className="text-2xl sm:text-3xl font-bold text-white">From Signup to Going Live</h3>
             <p className="text-gray-500 text-xs sm:text-sm">We make it effortless — 3 simple steps.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -422,7 +422,7 @@ export const LandingPage: React.FC = () => {
                 transition={{ delay: i * 0.15, duration: 0.5 }}
                 className="text-center sm:text-left space-y-3"
               >
-                <div className="w-12 h-12 mx-auto sm:mx-0 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-extrabold text-lg">{s.step}</div>
+                <div className="w-12 h-12 mx-auto sm:mx-0 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-lg">{s.step}</div>
                 <h4 className="text-base sm:text-lg font-bold text-white">{s.title}</h4>
                 <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">{s.desc}</p>
               </motion.div>
@@ -440,7 +440,7 @@ export const LandingPage: React.FC = () => {
           viewport={{ once: true }}
           className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-4 sm:space-y-6 relative z-10"
         >
-          <h3 className="text-2xl sm:text-4xl font-extrabold text-white">Ready to Transform Your Venue Management?</h3>
+          <h3 className="text-2xl sm:text-4xl font-bold text-white">Ready to Transform Your Venue Management?</h3>
           <p className="text-gray-400 text-xs sm:text-sm leading-relaxed max-w-xl mx-auto">
             Join hundreds of venue owners who have simplified their operations and grown their business with VenuePro.
           </p>
@@ -466,8 +466,8 @@ export const LandingPage: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-between gap-8 mb-10 sm:mb-12">
             <div className="space-y-3 max-w-xs">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center font-extrabold text-white text-sm shadow-lg shadow-primary/20">V</div>
-                <span className="font-extrabold text-lg tracking-tight text-white">VenuePro</span>
+                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center font-bold text-white text-sm shadow-lg shadow-primary/20">V</div>
+                <span className="font-bold text-lg tracking-tight text-white">VenuePro</span>
               </div>
               <p className="text-gray-500 text-xs leading-relaxed">Making venue management simple and efficient. Manage Smarter, Grow Faster.</p>
             </div>

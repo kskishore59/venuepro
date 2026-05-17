@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
-import { 
-  Building2, Calendar, 
-  TrendingUp, Globe, Sparkles, Trash2, Edit3, Upload 
+import {
+  Building2, Calendar,
+  TrendingUp, Globe, Sparkles, Trash2, Edit3, Upload
 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
 import { toast } from 'sonner';
@@ -123,7 +123,7 @@ export const SuperAdmin: React.FC = () => {
             <Sparkles className="w-3.5 h-3.5" />
             <span>Platform Controller Mode</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight mt-2">Command Center</h1>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight mt-2">Command Center</h1>
           <p className="text-gray-500">Global SaaS supervision, live system traffic, and organization metrics.</p>
         </div>
       </div>
@@ -141,11 +141,10 @@ export const SuperAdmin: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center space-x-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
-                activeTab === tab.id 
-                  ? 'bg-primary text-white shadow-md' 
+              className={`flex items-center space-x-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all ${activeTab === tab.id
+                  ? 'bg-primary text-white shadow-md'
                   : 'text-gray-600 hover:text-gray-950 hover:bg-gray-50'
-              }`}
+                }`}
             >
               <Icon className="w-4 h-4" />
               <span>{tab.label}</span>
@@ -158,11 +157,11 @@ export const SuperAdmin: React.FC = () => {
       {activeTab === 'analytics' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
+
             {/* GA Real-time Card */}
             <div className="bg-[#1b253b] text-white p-6 rounded-2xl shadow-xl flex flex-col justify-between min-h-[350px] relative overflow-hidden border border-gray-800">
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-2xl pointer-events-none" />
-              
+
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold tracking-wider text-gray-400 uppercase">Realtime Monitor</h3>
@@ -171,7 +170,7 @@ export const SuperAdmin: React.FC = () => {
                     <span className="text-green-400 text-xs font-bold uppercase tracking-widest">Live</span>
                   </div>
                 </div>
-                
+
                 <div className="space-y-1">
                   <span className="text-6xl font-black tracking-tight">{MOCK_REALTIME_USERS}</span>
                   <p className="text-xs text-gray-400 font-medium">active operators in the last 30 minutes</p>
@@ -184,8 +183,8 @@ export const SuperAdmin: React.FC = () => {
                   <AreaChart data={MOCK_TRAFFIC_DATA}>
                     <defs>
                       <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="#10B981" stopOpacity={0.8} />
+                        <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <Tooltip contentStyle={{ backgroundColor: '#111827', borderColor: '#374151', color: '#fff' }} />
@@ -219,12 +218,12 @@ export const SuperAdmin: React.FC = () => {
                   <AreaChart data={MOCK_REVENUE_METRICS}>
                     <defs>
                       <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#107ed8" stopOpacity={0.2}/>
-                        <stop offset="95%" stopColor="#107ed8" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="#107ed8" stopOpacity={0.2} />
+                        <stop offset="95%" stopColor="#107ed8" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <XAxis dataKey="month" stroke="#94a3b8" fontSize={12} tickLine={false} />
-                    <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} tickFormatter={(val) => `₹${val/100000}L`} />
+                    <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} tickFormatter={(val) => `₹${val / 100000}L`} />
                     <Tooltip formatter={(val: any) => `₹${val.toLocaleString('en-IN')}`} />
                     <Area type="monotone" dataKey="value" stroke="#107ed8" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
                   </AreaChart>
@@ -235,7 +234,7 @@ export const SuperAdmin: React.FC = () => {
 
           {/* Core breakdown row */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
+
             {/* Device breakdown card */}
             <div className="bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm space-y-4">
               <h4 className="text-sm font-semibold text-gray-500 uppercase">Device Statistics</h4>
@@ -259,7 +258,7 @@ export const SuperAdmin: React.FC = () => {
               <h4 className="text-sm font-semibold text-gray-500 uppercase">Organizations Base</h4>
               <div className="flex items-center justify-between mt-4">
                 <div className="space-y-1">
-                  <p className="text-4xl font-extrabold text-gray-900">{globalOrgs.length}</p>
+                  <p className="text-4xl font-bold text-gray-900">{globalOrgs.length}</p>
                   <p className="text-xs text-gray-500">Registered SaaS Tenants</p>
                 </div>
                 <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center">
@@ -277,7 +276,7 @@ export const SuperAdmin: React.FC = () => {
               <h4 className="text-sm font-semibold text-gray-500 uppercase">System-Wide Bookings</h4>
               <div className="flex items-center justify-between mt-4">
                 <div className="space-y-1">
-                  <p className="text-4xl font-extrabold text-gray-900">{globalBookings.length}</p>
+                  <p className="text-4xl font-bold text-gray-900">{globalBookings.length}</p>
                   <p className="text-xs text-gray-500">Total Confirmed Events</p>
                 </div>
                 <div className="w-14 h-14 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center">
@@ -321,14 +320,14 @@ export const SuperAdmin: React.FC = () => {
                     <td className="px-6 py-4">{org.gstin || <span className="text-gray-400 italic">Not set</span>}</td>
                     <td className="px-6 py-4 text-xs text-gray-400">{new Date(org.created_at).toLocaleDateString()}</td>
                     <td className="px-6 py-4 text-right space-x-2">
-                      <button 
+                      <button
                         onClick={() => handleEditClick(org, 'org')}
                         className="p-1.5 text-gray-500 hover:text-primary hover:bg-blue-50 rounded-lg transition-all"
                       >
                         <Edit3 className="w-4 h-4" />
                       </button>
-                      <button 
-                        onClick={() => { if(confirm('Are you sure you want to delete this org?')) deleteOrg.mutate(org.id); }}
+                      <button
+                        onClick={() => { if (confirm('Are you sure you want to delete this org?')) deleteOrg.mutate(org.id); }}
                         className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -441,7 +440,7 @@ export const SuperAdmin: React.FC = () => {
 
           <div className="flex space-x-3 pt-4 border-t">
             <button
-              onClick={() => { if(selectedItem) updateOrg.mutate({ id: selectedItem.id, ...editForm }); }}
+              onClick={() => { if (selectedItem) updateOrg.mutate({ id: selectedItem.id, ...editForm }); }}
               className="flex-1 py-2 px-4 bg-primary text-white rounded-md text-sm font-semibold hover:bg-primary/95 transition-all shadow-sm"
             >
               Save Organization Changes

@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
-import { 
-  XAxis, YAxis, Tooltip, ResponsiveContainer, 
-  AreaChart, Area 
+import {
+  XAxis, YAxis, Tooltip, ResponsiveContainer,
+  AreaChart, Area
 } from 'recharts';
 import { formatCurrency } from '../lib/utils';
-import { 
-  TrendingUp, Users, Calendar, DollarSign, 
-  Globe, CalendarDays, ArrowUpRight 
+import {
+  TrendingUp, Users, Calendar, DollarSign,
+  Globe, CalendarDays, ArrowUpRight
 } from 'lucide-react';
 import { format, parseISO, subDays } from 'date-fns';
 import { SEO } from '../components/ui/SEO';
@@ -67,7 +67,7 @@ export const Reports: React.FC = () => {
 
   // 5. GA4 styled Analytics Processing: Acquisition over time
   const trafficByDay: Record<string, { date: string, bookings: number, revenue: number }> = {};
-  
+
   // Initialize date indexes
   const daysToGenerate = dateRange === '7d' ? 7 : (dateRange === '30d' ? 30 : 60);
   for (let i = daysToGenerate - 1; i >= 0; i--) {
@@ -113,7 +113,7 @@ export const Reports: React.FC = () => {
   const hallUtilizationData = Object.keys(hallCounts).map(name => ({
     name,
     bookings: hallCounts[name]
-  })).sort((a,b) => b.bookings - a.bookings);
+  })).sort((a, b) => b.bookings - a.bookings);
 
   // Overall sums
   const totalRevenue = filteredBookings.reduce((sum, b) => sum + b.total_amount, 0);
@@ -128,7 +128,7 @@ export const Reports: React.FC = () => {
       {/* GA4 style Sub-Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-2xl border border-gray-200 shadow-sm gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">Reports & Performance</h1>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Reports & Performance</h1>
           <p className="text-gray-500 text-sm mt-0.5">Google Analytics-style dashboard tracking acquisition streams, conversion rates, and revenue indexes.</p>
         </div>
 
@@ -152,7 +152,7 @@ export const Reports: React.FC = () => {
         <div className="bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Booked Revenue</p>
-            <p className="text-3xl font-extrabold text-gray-900">{formatCurrency(totalRevenue)}</p>
+            <p className="text-3xl font-bold text-gray-900">{formatCurrency(totalRevenue)}</p>
           </div>
           <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center">
             <DollarSign className="w-5 h-5" />
@@ -162,7 +162,7 @@ export const Reports: React.FC = () => {
         <div className="bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Acquired Events</p>
-            <p className="text-3xl font-extrabold text-gray-900">{filteredBookings.length}</p>
+            <p className="text-3xl font-bold text-gray-900">{filteredBookings.length}</p>
           </div>
           <div className="w-12 h-12 bg-green-50 text-green-600 rounded-full flex items-center justify-center">
             <Calendar className="w-5 h-5" />
@@ -172,7 +172,7 @@ export const Reports: React.FC = () => {
         <div className="bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total CRM Leads</p>
-            <p className="text-3xl font-extrabold text-gray-900">{totalLeads}</p>
+            <p className="text-3xl font-bold text-gray-900">{totalLeads}</p>
           </div>
           <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center">
             <Users className="w-5 h-5" />
@@ -182,7 +182,7 @@ export const Reports: React.FC = () => {
         <div className="bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Goal Conversion</p>
-            <p className="text-3xl font-extrabold text-gray-900">{conversionRate}%</p>
+            <p className="text-3xl font-bold text-gray-900">{conversionRate}%</p>
           </div>
           <div className="w-12 h-12 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center">
             <TrendingUp className="w-5 h-5" />
@@ -192,7 +192,7 @@ export const Reports: React.FC = () => {
 
       {/* Main Charts Layout (GA4 Double Grid) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+
         {/* GA4 Users / Revenue Timeline */}
         <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between min-h-[400px]">
           <div className="flex justify-between items-center border-b border-gray-100 pb-4">
@@ -211,12 +211,12 @@ export const Reports: React.FC = () => {
               <AreaChart data={acquisitionData}>
                 <defs>
                   <linearGradient id="colorAcq" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#107ed8" stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor="#107ed8" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#107ed8" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#107ed8" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} tickFormatter={(val) => `₹${val/1000}`} />
+                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} tickFormatter={(val) => `₹${val / 1000}`} />
                 <Tooltip formatter={(val: any) => `₹${val.toLocaleString('en-IN')}`} />
                 <Area type="monotone" dataKey="revenue" stroke="#107ed8" strokeWidth={3} fillOpacity={1} fill="url(#colorAcq)" />
               </AreaChart>
@@ -239,12 +239,12 @@ export const Reports: React.FC = () => {
                   <span className="font-bold text-gray-900">{step.count} ({step.percentage}%)</span>
                 </div>
                 <div className="w-full bg-gray-100 rounded-full h-2.5">
-                  <div 
-                    className="rounded-full h-2.5 transition-all duration-700" 
-                    style={{ 
-                      width: `${step.percentage}%`, 
-                      backgroundColor: COLORS[idx % COLORS.length] 
-                    }} 
+                  <div
+                    className="rounded-full h-2.5 transition-all duration-700"
+                    style={{
+                      width: `${step.percentage}%`,
+                      backgroundColor: COLORS[idx % COLORS.length]
+                    }}
                   />
                 </div>
               </div>

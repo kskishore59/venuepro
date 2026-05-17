@@ -35,9 +35,9 @@ export const Customers: React.FC = () => {
     enabled: !!organization?.id
   });
 
-  const filteredCustomers = customers.filter(c => 
-    c.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    c.phone.includes(searchTerm) || 
+  const filteredCustomers = customers.filter(c =>
+    c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    c.phone.includes(searchTerm) ||
     (c.email && c.email.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
@@ -76,9 +76,9 @@ export const Customers: React.FC = () => {
         <div className="p-4 border-b flex justify-between items-center">
           <div className="relative w-96">
             <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input 
-              type="text" 
-              placeholder="Search by name, phone or email..." 
+            <input
+              type="text"
+              placeholder="Search by name, phone or email..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               className="pl-10 w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border py-2"
@@ -108,7 +108,7 @@ export const Customers: React.FC = () => {
                 </tr>
               ) : filteredCustomers.map((customer) => {
                 const totalSpent = customer.bookings?.reduce((sum, b) => sum + (b.status !== 'cancelled' ? b.total_amount : 0), 0) || 0;
-                
+
                 return (
                   <tr key={customer.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -122,8 +122,8 @@ export const Customers: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 flex items-center"><Phone className="w-3 h-3 mr-1 text-gray-400"/> {customer.phone}</div>
-                      {customer.email && <div className="text-sm text-gray-500 flex items-center mt-1"><Mail className="w-3 h-3 mr-1 text-gray-400"/> {customer.email}</div>}
+                      <div className="text-sm text-gray-900 flex items-center"><Phone className="w-3 h-3 mr-1 text-gray-400" /> {customer.phone}</div>
+                      {customer.email && <div className="text-sm text-gray-500 flex items-center mt-1"><Mail className="w-3 h-3 mr-1 text-gray-400" /> {customer.email}</div>}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
