@@ -16,7 +16,7 @@ export const AddVenueForm: React.FC<{ onClose: () => void }> = ({ onClose }) => 
         org_id: organization!.id,
         ...data
       }).select().single();
-      
+
       if (error) throw error;
       return newVenue;
     },
@@ -31,8 +31,8 @@ export const AddVenueForm: React.FC<{ onClose: () => void }> = ({ onClose }) => 
   });
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 p-6 overflow-y-auto">
+    <div className="flex flex-col h-full ">
+      <div className="flex-1 p-6 overflow-y-auto flex-row ">
         <form id="venue-form" onSubmit={handleSubmit((d) => saveVenue.mutate(d))} className="space-y-6 max-w-2xl mx-auto">
           <div>
             <label className="block text-sm font-medium text-gray-700">Venue Name *</label>

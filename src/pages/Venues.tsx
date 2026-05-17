@@ -47,7 +47,7 @@ export const Venues: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 h-full flex flex-col">
+    <div className="space-y-6 h-full flex flex-col w-auto">
       <div className="flex justify-between items-end">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Venues & Halls</h1>

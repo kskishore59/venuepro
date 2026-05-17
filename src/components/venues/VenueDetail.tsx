@@ -5,7 +5,7 @@ import { HallForm } from './HallForm';
 import { formatCurrency } from '../../lib/utils';
 
 export const VenueDetail: React.FC<{ venue: Venue, halls: Hall[], onBack: () => void }> = ({ venue, halls, onBack }) => {
-  const [drawerMode, setDrawerMode] = useState<'none'|'add_hall'|'edit_hall'>('none');
+  const [drawerMode, setDrawerMode] = useState<'none' | 'add_hall' | 'edit_hall'>('none');
   const [selectedHall, setSelectedHall] = useState<Hall | null>(null);
 
   if (drawerMode !== 'none') {
@@ -25,10 +25,10 @@ export const VenueDetail: React.FC<{ venue: Venue, halls: Hall[], onBack: () => 
           </div>
         </div>
         <div className="flex-1 overflow-hidden">
-          <HallForm 
-            onClose={() => setDrawerMode('none')} 
-            venueId={venue.id} 
-            initialData={drawerMode === 'edit_hall' && selectedHall ? selectedHall : undefined} 
+          <HallForm
+            onClose={() => setDrawerMode('none')}
+            venueId={venue.id}
+            initialData={drawerMode === 'edit_hall' && selectedHall ? selectedHall : undefined}
           />
         </div>
       </div>
@@ -51,9 +51,9 @@ export const VenueDetail: React.FC<{ venue: Venue, halls: Hall[], onBack: () => 
               </div>
             </div>
           </div>
-          <button 
+          <button
             onClick={() => { setSelectedHall(null); setDrawerMode('add_hall'); }}
-            className="flex items-center px-6 py-3 bg-primary text-white rounded-xl font-bold text-sm hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 active:scale-95"
+            className="flex items-center  px-6 py-3 bg-primary text-white rounded-xl font-bold text-sm hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 active:scale-95"
           >
             <Edit2 className="w-4 h-4 mr-2" /> + Create New Space
           </button>
@@ -77,19 +77,19 @@ export const VenueDetail: React.FC<{ venue: Venue, halls: Hall[], onBack: () => 
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12 overflow-y-auto pr-2">
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-6 pb-12 overflow-y-auto pr-2 max-w-xl">
             {halls.map(hall => {
               const primaryPhoto = hall.media?.primary_photo || hall.media?.photos?.[0];
               const baseRental = hall.pricing?.base_rental || 0;
-              
+
               return (
-                <div 
-                  key={hall.id} 
+                <div
+                  key={hall.id}
                   className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer border-l-4 border-l-transparent hover:border-l-primary"
                   onClick={() => { setSelectedHall(hall); setDrawerMode('edit_hall'); }}
                 >
                   <div className="flex">
-                    <div className="w-40 h-40 bg-gray-50 shrink-0 relative">
+                    <div className="w-40 h-50 bg-gray-50 shrink-0 relative">
                       {primaryPhoto ? (
                         <img src={primaryPhoto} alt={hall.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       ) : (
@@ -101,14 +101,14 @@ export const VenueDetail: React.FC<{ venue: Venue, halls: Hall[], onBack: () => 
                         <div className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-black uppercase px-2 py-1 rounded shadow-lg">Inactive</div>
                       )}
                     </div>
-                    
+
                     <div className="p-5 flex-1 flex flex-col justify-between">
                       <div>
-                        <div className="flex justify-between items-start">
-                          <h3 className="text-lg font-black text-gray-900 group-hover:text-primary transition-colors leading-tight">{hall.name}</h3>
-                          <span className="text-[10px] font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded uppercase tracking-wider">{hall.hall_type || 'Hall'}</span>
+                        <div className="flex flex-col justify-between items-start">
+                          <h3 className="text-2xl font-black text-gray-900 group-hover:text-primary transition-colors leading-tight">{hall.name}</h3>
+                          <span className="text-[10px] font-bold mt-4 text-gray-400 bg-gray-100 px-2 py-1 rounded uppercase tracking-wider">{hall.hall_type || 'Hall'}</span>
                         </div>
-                        
+
                         <div className="mt-3 flex flex-wrap gap-4">
                           <div className="flex items-center text-xs font-semibold text-gray-600">
                             <Users className="w-3.5 h-3.5 mr-1.5 text-primary/50" />
@@ -122,7 +122,7 @@ export const VenueDetail: React.FC<{ venue: Venue, halls: Hall[], onBack: () => 
                           )}
                         </div>
                       </div>
-                      
+
                       <div className="mt-4 flex items-center justify-between border-t border-gray-50 pt-4">
                         <div className="text-xs font-bold text-gray-900">
                           Starts at <span className="text-primary">{formatCurrency(baseRental)}</span>

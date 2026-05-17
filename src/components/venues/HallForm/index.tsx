@@ -56,18 +56,17 @@ export const HallForm: React.FC<{ onClose: () => void, initialData?: Hall, venue
   });
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="flex flex-col h-full bg-white space-y-6 max-w-5xl mx-auto pb-16">
       {/* Tab Navigation */}
       <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-8 flex space-x-8">
         {TABS.map((tab, idx) => (
           <button
             key={tab}
             onClick={() => setActiveTab(idx)}
-            className={`py-5 text-sm font-semibold border-b-2 transition-all ${
-              activeTab === idx 
-                ? 'border-primary text-primary' 
-                : 'border-transparent text-gray-400 hover:text-gray-600'
-            }`}
+            className={`py-5 text-sm font-semibold border-b-2 transition-all ${activeTab === idx
+              ? 'border-primary text-primary'
+              : 'border-transparent text-gray-400 hover:text-gray-600'
+              }`}
           >
             {tab}
           </button>
@@ -92,36 +91,36 @@ export const HallForm: React.FC<{ onClose: () => void, initialData?: Hall, venue
       <div className="sticky bottom-0 z-10 bg-gray-50/80 backdrop-blur-md border-t border-gray-100 p-6 flex justify-between items-center px-8">
         <div className="flex space-x-3">
           {activeTab > 0 && (
-            <button 
+            <button
               type="button"
-              onClick={() => setActiveTab(a => a - 1)} 
+              onClick={() => setActiveTab(a => a - 1)}
               className="px-6 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
             >
-              Back to {TABS[activeTab - 1]}
+              Back
             </button>
           )}
         </div>
         <div className="flex space-x-3">
-          <button 
+          <button
             type="button"
-            onClick={onClose} 
+            onClick={onClose}
             className="px-6 py-2.5 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
           >
             Discard
           </button>
           {activeTab < TABS.length - 1 ? (
-            <button 
+            <button
               type="button"
-              onClick={() => setActiveTab(a => a + 1)} 
+              onClick={() => setActiveTab(a => a + 1)}
               className="px-8 py-2.5 text-sm font-bold text-white bg-primary rounded-lg hover:bg-primary/90 transition-all shadow-md active:scale-95"
             >
-              Continue to {TABS[activeTab + 1]}
+              Next
             </button>
           ) : (
-            <button 
-              form="hall-form" 
-              type="submit" 
-              disabled={saveHall.isPending} 
+            <button
+              form="hall-form"
+              type="submit"
+              disabled={saveHall.isPending}
               className="px-10 py-2.5 text-sm font-bold text-white bg-green-600 rounded-lg hover:bg-green-700 disabled:opacity-50 transition-all shadow-md active:scale-95"
             >
               {saveHall.isPending ? 'Saving...' : 'Publish Hall Details'}
