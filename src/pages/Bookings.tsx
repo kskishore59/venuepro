@@ -10,9 +10,12 @@ import { BookingDetail } from '../components/bookings/BookingDetail';
 import type { Booking } from '../types';
 import { Skeleton } from '../components/ui/Skeleton';
 import { SEO } from '../components/ui/SEO';
+import { useSubscription } from '../hooks/useSubscription';
+import { toast } from 'sonner';
 
 export const Bookings: React.FC = () => {
   const { organization } = useAuth();
+  const { subInfo } = useSubscription();
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const [drawerMode, setDrawerMode] = useState<'none' | 'create' | 'view' | 'edit'>('none');
@@ -35,6 +38,10 @@ export const Bookings: React.FC = () => {
   const activeBooking = bookings.find(b => b.id === selectedBooking?.id) || selectedBooking;
 
   const handleDateClick = (date: Date) => {
+    if (subInfo.isLocked) {
+      toast.error("Account locked: Please renew your subscription in settings to add bookings.");
+      return;
+    }
     setSelectedDate(date);
     setDrawerMode('create');
   };
@@ -70,7 +77,14 @@ export const Bookings: React.FC = () => {
           <p className="text-gray-500 text-xs md:text-sm mt-0.5">Manage your hall bookings, events, and schedules.</p>
         </div>
         <button
-          onClick={() => { setSelectedDate(new Date()); setDrawerMode('create'); }}
+          onClick={() => {
+            if (subInfo.isLocked) {
+              toast.error("Account locked: Please renew your subscription in settings to add bookings.");
+              return;
+            }
+            setSelectedDate(new Date());
+            setDrawerMode('create');
+          }}
           className="w-full sm:w-auto px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-bold text-xs md:text-sm text-center"
         >
           + New Booking
@@ -136,3 +150,4 @@ export const Bookings: React.FC = () => {
     </div>
   );
 };
+export default Bookings;

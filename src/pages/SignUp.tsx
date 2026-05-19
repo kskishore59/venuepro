@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -18,8 +18,9 @@ const signupSchema = z.object({
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 export const SignUp: React.FC = () => {
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState('');
 
   const { register, handleSubmit, formState: { errors } } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema)
@@ -28,7 +29,25 @@ export const SignUp: React.FC = () => {
   const onSubmit = async (data: SignupFormValues) => {
     setIsLoading(true);
     try {
-      // 1. Sign up user
+      // Check for duplicates first using the RPC function
+      const { data: checkData, error: checkError } = await supabase
+        .rpc('check_user_exists', { check_email: data.email, check_phone: data.phone });
+
+      if (!checkError && checkData && checkData.length > 0) {
+        const { email_exists, phone_exists } = checkData[0];
+        if (email_exists) {
+          toast.error('A user with this email address already exists.');
+          setIsLoading(false);
+          return;
+        }
+        if (phone_exists) {
+          toast.error('A user with this phone number already exists.');
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      // Fallback/extra client check or trigger auth signup
       const { error: authError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
@@ -36,23 +55,69 @@ export const SignUp: React.FC = () => {
           data: {
             full_name: data.name,
             phone: data.phone,
+            venueName: data.venueName, // Pass to handle_new_user trigger
           }
         }
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        // Handle common Auth errors
+        if (authError.message.toLowerCase().includes('already registered') || authError.message.toLowerCase().includes('exists')) {
+          toast.error('This email is already registered. Please login or use a different email.');
+          setIsLoading(false);
+          return;
+        }
+        throw authError;
+      }
 
-      // Real app might trigger Edge Function to create org & profile securely
-      // For this test we assume trigger or client-side creation logic if RLS permits
-
-      toast.success('Account created successfully!');
-      navigate('/dashboard');
+      setRegisteredEmail(data.email);
+      setIsSubmitted(true);
+      toast.success('Registration initiated successfully!');
     } catch (error: any) {
       toast.error(error.message || 'Failed to create account');
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <SEO
+          title="Confirm Email"
+          description="Confirm your email registration with VenuePro."
+        />
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-100 text-center space-y-6">
+            <div className="w-16 h-16 bg-blue-50 text-[#107ed8] rounded-full flex items-center justify-center mx-auto">
+              <svg className="w-8 h-8 text-[#107ed8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 19v-8.93a2 2 0 01.89-1.664l8-4.8a2 2 0 012.22 0l8 4.8A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-2.25-1.5a2 2 0 00-2.22 0l-2.25 1.5" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">Verify your email</h2>
+            <p className="text-sm text-gray-600 leading-relaxed text-center">
+              We have sent a verification link to <strong className="text-gray-900">{registeredEmail}</strong>.<br />
+              Please check your inbox and click the link to confirm your account and activate your venue dashboard.
+            </p>
+            <div className="pt-4 border-t border-gray-100 flex flex-col space-y-3">
+              <Link
+                to="/login"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+              >
+                Go to Login
+              </Link>
+              <button
+                onClick={() => setIsSubmitted(false)}
+                className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                Back to Sign Up
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -152,3 +217,4 @@ export const SignUp: React.FC = () => {
     </div>
   );
 };
+export default SignUp;

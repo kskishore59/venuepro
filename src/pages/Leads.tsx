@@ -12,9 +12,12 @@ import { isToday, format } from 'date-fns';
 import { LayoutGrid, List, Phone, Mail, Calendar, Eye, Edit2 } from 'lucide-react';
 import { BoardSkeleton, TableSkeleton } from '../components/ui/Skeleton';
 import { SEO } from '../components/ui/SEO';
+import { useSubscription } from '../hooks/useSubscription';
+import { toast } from 'sonner';
 
 export const Leads: React.FC = () => {
   const { organization } = useAuth();
+  const { subInfo } = useSubscription();
   const queryClient = useQueryClient();
   const [drawerMode, setDrawerMode] = useState<'none' | 'create' | 'view' | 'edit'>('none');
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
@@ -130,7 +133,14 @@ export const Leads: React.FC = () => {
           </div>
 
           <button
-            onClick={() => { setSelectedLead(null); setDrawerMode('create'); }}
+            onClick={() => {
+              if (subInfo.isLocked) {
+                toast.error("Account locked: Please renew your subscription in settings to add leads.");
+                return;
+              }
+              setSelectedLead(null);
+              setDrawerMode('create');
+            }}
             className="flex-1 sm:flex-initial px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-bold text-xs md:text-sm text-center"
           >
             + New Lead
@@ -268,3 +278,4 @@ export const Leads: React.FC = () => {
     </div>
   );
 };
+export default Leads;

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Outlet, Navigate, NavLink, useLocation } from 'react-router-dom';
-import { Menu, Home, Calendar, Users, Building, X, Bell, User } from 'lucide-react';
+import { Menu, Home, Calendar, Users, Building, X, Bell, User, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { Sidebar } from './Sidebar';
 import { useAuth } from '../../context/AuthContext';
 import { cn } from '../../lib/utils';
+import { useSubscription } from '../../hooks/useSubscription';
 
 export const DashboardLayout: React.FC = () => {
   const { user, loading, profile } = useAuth();
+  const { subInfo } = useSubscription();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
 
@@ -95,6 +97,41 @@ export const DashboardLayout: React.FC = () => {
             </div>
           </div>
         </header>
+
+        {/* Subscription Banners */}
+        {subInfo.showWarning && (
+          <div className="bg-gradient-to-r from-amber-500 to-orange-600 text-white px-4 py-2.5 text-xs md:text-sm font-bold flex items-center justify-between shadow-md relative z-20 shrink-0">
+            <div className="flex items-center space-x-2">
+              <AlertTriangle className="w-4 h-4 shrink-0 animate-bounce" />
+              <span>
+                Trial Reminder: Your free trial ends in {subInfo.trialDaysLeft} days. Upgrade your plan now to prevent feature locks!
+              </span>
+            </div>
+            <NavLink
+              to="/settings"
+              className="bg-white text-orange-700 hover:text-orange-800 px-3 py-1 rounded-lg text-xs font-bold transition-colors shrink-0 shadow-sm ml-4"
+            >
+              Upgrade Plan
+            </NavLink>
+          </div>
+        )}
+
+        {subInfo.isLocked && (
+          <div className="bg-gradient-to-r from-red-600 to-red-800 text-white px-4 py-2.5 text-xs md:text-sm font-bold flex items-center justify-between shadow-md relative z-20 shrink-0">
+            <div className="flex items-center space-x-2">
+              <ShieldAlert className="w-4 h-4 shrink-0" />
+              <span>
+                Account Locked: Your trial or subscription has expired. Please renew to add new bookings and leads.
+              </span>
+            </div>
+            <NavLink
+              to="/settings"
+              className="bg-white text-red-700 hover:text-red-800 px-3 py-1 rounded-lg text-xs font-bold transition-colors shrink-0 shadow-sm ml-4"
+            >
+              Renew Plan
+            </NavLink>
+          </div>
+        )}
         
         {/* Main Content Area - compact scroll offsets on mobile */}
         <main className="flex-1 overflow-y-auto p-3.5 md:p-6 lg:p-8 pb-24 md:pb-8 bg-gray-50/50">

@@ -7,6 +7,7 @@ export interface Organization {
   address?: string;
   settings?: Record<string, any>;
   plan: string;
+  created_at?: string;
 }
 
 export interface Profile {

@@ -140,6 +140,35 @@ export const DataImport: React.FC<DataImportProps> = ({ type, onClose }) => {
     reader.readAsArrayBuffer(selected);
   };
 
+  const normalizePhone = (phone: any): string => {
+    if (!phone) return "";
+    const cleaned = String(phone).replace(/\D/g, "");
+    if (cleaned.length === 12 && cleaned.startsWith("91")) {
+      return cleaned.slice(2);
+    }
+    if (cleaned.length === 11 && cleaned.startsWith("0")) {
+      return cleaned.slice(1);
+    }
+    return cleaned;
+  };
+
+  const parseExcelDate = (val: any): string | null => {
+    if (!val) return null;
+    if (typeof val === "number") {
+      // Excel serial date number
+      const date = new Date((val - 25569) * 86400 * 1000);
+      return date.toISOString().split("T")[0];
+    }
+    const str = String(val).trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+
+    const date = new Date(str);
+    if (!isNaN(date.getTime())) {
+      return date.toISOString().split("T")[0];
+    }
+    return null;
+  };
+
   const importData = async () => {
     if (!file || !organization?.id) return;
 
@@ -168,7 +197,7 @@ export const DataImport: React.FC<DataImportProps> = ({ type, onClose }) => {
           const { error } = await supabase.from("leads").insert({
             org_id: organization.id,
             name: String(row.name).trim(),
-            phone: String(row.phone).trim(),
+            phone: normalizePhone(row.phone),
             email: row.email ? String(row.email).trim() : null,
             source: row.source || "import",
             status: [
@@ -183,7 +212,7 @@ export const DataImport: React.FC<DataImportProps> = ({ type, onClose }) => {
               ? row.status
               : "new",
             event_type: row.event_type || null,
-            tentative_date: row.tentative_date || null,
+            tentative_date: parseExcelDate(row.tentative_date) || null,
             guest_count: row.guest_count ? Number(row.guest_count) : null,
             budget_from: row.budget_from ? Number(row.budget_from) : null,
             budget_to: row.budget_to ? Number(row.budget_to) : null,
@@ -197,7 +226,6 @@ export const DataImport: React.FC<DataImportProps> = ({ type, onClose }) => {
         }
       } else {
         // For bookings, first create or find customers, then create bookings
-        // Get the first hall for the org as default
         const { data: halls } = await supabase
           .from("halls")
           .select("id")
@@ -207,54 +235,75 @@ export const DataImport: React.FC<DataImportProps> = ({ type, onClose }) => {
 
         if (!defaultHallId) {
           toast.error(
-            "Please create at least one venue and hall before importing bookings.",
+              "Please create at least one venue and hall before importing bookings."
           );
           setImporting(false);
           return;
         }
 
+        // Cache customer IDs to avoid double insert/lookup of same customer within import file
+        const customerCache = new Map<string, string>();
+
         for (let i = 0; i < rows.length; i++) {
           const row = rows[i];
           if (!row.customer_name || !row.customer_phone || !row.event_date) {
             errors.push(
-              `Row ${i + 2}: Missing required field (customer_name, customer_phone, or event_date)`,
+              `Row ${i + 2}: Missing required field (customer_name, customer_phone, or event_date)`
             );
             continue;
           }
 
-          // Upsert customer
-          // let customerId: string;
-          // const { data: existingCustomer } = await supabase
-          //   .from("customers")
-          //   .select("id")
-          //   .eq("org_id", organization.id)
-          //   .eq("phone", String(row.customer_phone).trim())
-          //   .limit(1);
+          const rawPhone = String(row.customer_phone).trim();
+          const normalized = normalizePhone(rawPhone);
+          const name = String(row.customer_name).trim();
+          const email = row.customer_email ? String(row.customer_email).trim() : null;
 
-          // if (existingCustomer && existingCustomer.length > 0) {
-          //   customerId = existingCustomer[0].id;
-          // } else {
-          //   const { data: newCustomer, error: custErr } = await supabase
-          //     .from("customers")
-          //     .insert({
-          //       org_id: organization.id,
-          //       name: String(row.customer_name).trim(),
-          //       phone: String(row.customer_phone).trim(),
-          //       email: row.customer_email
-          //         ? String(row.customer_email).trim()
-          //         : null,
-          //     })
-          //     .select("id")
-          //     .single();
+          let customerId = "";
 
-          //   if (custErr || !newCustomer) {
-          //     errors.push(
-          //       `Row ${i + 2}: Failed to create customer - ${custErr?.message}`,
-          //     );
-          //     continue;
-          //   }
-          //   customerId = newCustomer.id;
-          // }
+          // Check memory cache first
+          if (customerCache.has(normalized)) {
+            customerId = customerCache.get(normalized)!;
+          } else {
+            // Check database
+            const { data: existingCustomer, error: queryErr } = await supabase
+              .from("customers")
+              .select("id")
+              .eq("org_id", organization.id)
+              .eq("phone", normalized)
+              .limit(1);
+
+            if (!queryErr && existingCustomer && existingCustomer.length > 0) {
+              customerId = existingCustomer[0].id;
+              customerCache.set(normalized, customerId);
+            } else {
+              // Create new customer
+              const { data: newCustomer, error: custErr } = await supabase
+                .from("customers")
+                .insert({
+                  org_id: organization.id,
+                  name,
+                  phone: normalized,
+                  email,
+                })
+                .select("id")
+                .single();
+
+              if (custErr || !newCustomer) {
+                errors.push(
+                  `Row ${i + 2}: Failed to create customer - ${custErr?.message || "unknown error"}`
+                );
+                continue;
+              }
+              customerId = newCustomer.id;
+              customerCache.set(normalized, customerId);
+            }
+          }
+
+          const parsedDate = parseExcelDate(row.event_date);
+          if (!parsedDate) {
+            errors.push(`Row ${i + 2}: Invalid event_date format`);
+            continue;
+          }
 
           const validStatuses = [
             "inquiry",
@@ -264,17 +313,22 @@ export const DataImport: React.FC<DataImportProps> = ({ type, onClose }) => {
             "completed",
             "cancelled",
           ];
+          const totalAmount = Number(row.total_amount) || 0;
+          const advanceAmount = Number(row.advance_amount) || 0;
+          const balanceAmount = Number(totalAmount - advanceAmount) || 0;
+
           const { error: bookErr } = await supabase.from("bookings").insert({
             org_id: organization.id,
+            customer_id: customerId,
             hall_id: row.hall_id || defaultHallId,
             event_type: row.event_type || "other",
-            event_date: row.event_date,
+            event_date: parsedDate,
             start_time: row.start_time || null,
             end_time: row.end_time || null,
             guest_count: row.guest_count ? Number(row.guest_count) : null,
-            total_amount: Number(row.total_amount) || 0,
-            advance_amount: Number(row.advance_amount) || 0,
-            balance_amount: Number(row.total_amount - row.advance_amount) || 0,
+            total_amount: totalAmount,
+            advance_amount: advanceAmount,
+            balance_amount: balanceAmount,
             status: validStatuses.includes(row.status)
               ? row.status
               : "confirmed",
@@ -297,6 +351,7 @@ export const DataImport: React.FC<DataImportProps> = ({ type, onClose }) => {
       if (successCount > 0) {
         queryClient.invalidateQueries({ queryKey: [type] });
         queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+        queryClient.invalidateQueries({ queryKey: ["customers"] });
         toast.success(`Successfully imported ${successCount} ${type}!`);
       }
     } catch (err: any) {
