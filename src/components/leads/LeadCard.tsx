@@ -50,31 +50,31 @@ export const LeadCard: React.FC<LeadCardProps> = ({ lead, onClick }) => {
       {...listeners}
       onClick={() => onClick(lead)}
       className={cn(
-        "bg-white p-3 rounded-lg shadow-sm border border-gray-200 cursor-grab active:cursor-grabbing hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-md transition-all duration-205 group",
-        isDragging && "opacity-50 border-dashed border-2 border-primary"
+        "bg-white p-3.5 rounded-xl shadow-sm border border-slate-200 cursor-grab active:cursor-grabbing hover:border-[#107ed8]/40 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 group",
+        isDragging && "opacity-50 border-dashed border-2 border-[#107ed8] shadow-lg shadow-[#107ed8]/10"
       )}
     >
-      <div className="flex justify-between items-start mb-2">
-        <h4 className="font-semibold text-gray-900 text-sm truncate pr-2">{lead.name}</h4>
+      <div className="flex justify-between items-start mb-2.5">
+        <h4 className="font-bold text-slate-900 text-sm truncate pr-2 tracking-tight">{lead.name}</h4>
         <div className="flex-shrink-0" title={lead.source}>
           {getSourceIcon(lead.source)}
         </div>
       </div>
       
-      <div className="flex items-center text-xs text-gray-500 mb-2">
-        <Phone className="w-3 h-3 mr-1" /> {lead.phone}
+      <div className="flex items-center text-xs font-medium text-slate-500 mb-2.5">
+        <Phone className="w-3.5 h-3.5 mr-1.5 text-slate-400" /> {lead.phone}
       </div>
 
       {(lead.event_type || lead.tentative_date) && (
-        <div className="text-xs bg-gray-50 p-1.5 rounded text-gray-600 mb-2 truncate">
+        <div className="text-[11px] bg-slate-50 border border-slate-100 p-1.5 rounded-lg text-slate-600 mb-3 truncate font-medium">
           {lead.event_type && <span className="capitalize">{lead.event_type}</span>}
           {lead.event_type && lead.tentative_date && ' • '}
           {lead.tentative_date && format(new Date(lead.tentative_date), 'dd MMM yyyy')}
         </div>
       )}
 
-      <div className="flex items-center justify-between mt-3 pt-2 border-t border-gray-100">
-        <div className={cn("text-xs font-medium", daysSinceContact > 3 ? "text-red-600" : "text-gray-500")}>
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
+        <div className={cn("text-[10px] font-bold uppercase tracking-wider", daysSinceContact > 3 ? "text-red-500" : "text-slate-400")}>
           {daysSinceContact === 0 ? 'Contacted today' : `${daysSinceContact}d ago`}
         </div>
         

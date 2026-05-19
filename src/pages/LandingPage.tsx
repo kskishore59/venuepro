@@ -52,34 +52,37 @@ export const LandingPage: React.FC = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   return (
-    <div className="bg-[#0b0f19] text-white min-h-screen font-sans overflow-x-hidden selection:bg-primary selection:text-white">
+    <div className="bg-[#f8fafc] text-slate-800 min-h-screen font-sans overflow-x-hidden selection:bg-[#107ed8]/10 selection:text-[#107ed8] bg-dotted">
       <SEO title="Banquet & Venue Management Software" description="Eliminate double bookings, coordinate cleanliness operations, track payments, and grow your venue business with VenuePro." />
 
-      {/* Floating Gradient Backdrop mesh */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[400px] sm:h-[600px] bg-gradient-to-b from-primary/10 via-blue-500/5 to-transparent rounded-full blur-3xl pointer-events-none" />
+      {/* Floating Gradient Backdrop mesh - Google Analytics inspired soft blurs */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1200px] h-[500px] bg-gradient-to-b from-[#107ed8]/5 via-[#C5A059]/3 to-transparent rounded-full blur-3xl pointer-events-none" />
 
-      {/* Header / Navbar - compact and responsive */}
-      <header className="relative border-b border-gray-800/80 bg-[#0b0f19]/80 backdrop-blur-md sticky top-0 z-50">
+      {/* Header / Navbar - Crisp light Google style */}
+      <header className="relative border-b border-slate-200/80 bg-white/90 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-primary flex items-center justify-center font-bold text-white shadow-lg shadow-primary/20 text-sm">V</div>
-            <span className="font-bold text-base sm:text-lg tracking-tight bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">VenuePro</span>
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center font-bold text-white shadow-md shadow-primary/25">
+              <span className="text-sm font-extrabold">VP</span>
+            </div>
+            <span className="font-extrabold text-base sm:text-lg tracking-tight text-slate-900">VenuePro</span>
+            <span className="px-2 py-0.5 bg-slate-100 border border-slate-200 text-[9px] text-slate-500 rounded-md font-mono hidden sm:inline-block font-bold">Stable v1.4</span>
           </div>
 
-          <nav className="hidden md:flex items-center space-x-8 text-sm font-semibold text-gray-400">
-            <a href="#pain" className="hover:text-white transition-colors">Why VenuePro</a>
-            <a href="#features" className="hover:text-white transition-colors">Features Matrix</a>
-            <a href="#testimonials" className="hover:text-white transition-colors">Success Stories</a>
-            <a href="#faqs" className="hover:text-white transition-colors">FAQ</a>
+          <nav className="hidden md:flex items-center space-x-8 text-xs font-bold text-slate-500 uppercase tracking-widest">
+            <a href="#pain" className="hover:text-slate-950 transition-colors">Why VenuePro</a>
+            <a href="#features" className="hover:text-slate-950 transition-colors">Features</a>
+            <a href="#testimonials" className="hover:text-slate-950 transition-colors">Success Stories</a>
+            <a href="#faqs" className="hover:text-slate-950 transition-colors">FAQ</a>
           </nav>
 
           <div className="flex items-center space-x-2 sm:space-x-4">
-            <Link to="/login" className="text-xs sm:text-sm font-bold text-gray-300 hover:text-white transition-colors px-2 py-1">
+            <Link to="/login" className="text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors px-2 py-1">
               Log In
             </Link>
             <Link
               to="/signup"
-              className="px-3 py-1.5 sm:px-4 sm:py-2 bg-primary text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-primary/95 transition-all shadow-md shadow-primary/10 hover:shadow-lg hover:shadow-primary/20 shrink-0"
+              className="btn-brand px-3.5 py-2 text-xs sm:text-sm rounded-xl"
             >
               List Venue
             </Link>
@@ -87,121 +90,143 @@ export const LandingPage: React.FC = () => {
         </div>
       </header>
 
-      {/* HERO SECTION - compact spacing on mobile */}
-      <section className="relative pt-6 sm:pt-12 pb-12 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      {/* HERO SECTION - Crisp Light Layout */}
+      <section className="relative pt-8 sm:pt-14 pb-14 sm:pb-24 max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
 
         {/* Left column */}
-        <div className="lg:col-span-6 space-y-4 sm:space-y-6 z-10 text-center lg:text-left">
+        <div className="lg:col-span-5 space-y-4 sm:space-y-6 z-10 text-center lg:text-left">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 bg-primary/10 border border-primary/20 text-primary rounded-full text-[10px] sm:text-xs font-semibold uppercase tracking-wider"
+            className="inline-flex items-center space-x-1.5 px-3 py-1 bg-[#107ed8]/8 border border-[#107ed8]/20 text-[#107ed8] rounded-full text-[10px] sm:text-xs font-extrabold uppercase tracking-wider"
           >
-            <Sparkles className="w-3 h-3 text-primary shrink-0" />
+            <Sparkles className="w-3.5 h-3.5 text-[#107ed8] shrink-0" />
             <span>Modern Operating System for Venues</span>
           </motion.div>
 
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none"
+            className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-slate-900"
           >
             Manage Smarter. <br />
-            <span className="bg-gradient-to-r from-primary via-blue-400 to-emerald-400 bg-clip-text text-transparent">Grow Faster.</span>
+            <span className="bg-gradient-to-r from-[#107ed8] via-blue-600 to-[#C5A059] bg-clip-text text-transparent">Grow Faster.</span>
           </motion.h2>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-gray-400 text-sm sm:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0"
+            className="text-slate-500 text-sm sm:text-base leading-relaxed max-w-xl mx-auto lg:mx-0"
           >
-            The all-in-one platform helping Indian venue owners streamline booking calendars, track payments, coordinate cleanliness staff, and grow business double-booking free.
+            The premier SaaS platform helping Indian venue owners streamline booking calendars, track payments, coordinate cleanliness staff, and grow business double-booking free.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-row items-center justify-center lg:justify-start gap-3 pt-2"
+            className="flex flex-row items-center justify-center lg:justify-start gap-3.5 pt-2"
           >
             <Link
               to="/signup"
-              className="flex-1 sm:flex-initial flex items-center justify-center px-4 py-2.5 sm:px-6 sm:py-3 bg-primary text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-primary/95 transition-all shadow-lg shadow-primary/20 hover:shadow-xl hover:scale-[1.02] text-center"
+              className="btn-brand flex-1 sm:flex-initial flex items-center justify-center px-5 py-3 text-xs sm:text-sm rounded-xl hover:scale-[1.02] text-center"
             >
-              Start Trial <ArrowRight className="w-3.5 h-3.5 ml-1.5 shrink-0" />
+              Start Trial <ArrowRight className="w-4 h-4 ml-1.5 shrink-0" />
             </Link>
             <a
               href="#features"
-              className="flex-1 sm:flex-initial flex items-center justify-center px-4 py-2.5 sm:px-6 sm:py-3 bg-gray-900 border border-gray-800 text-gray-300 hover:text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-gray-800/80 transition-all hover:scale-[1.02] text-center"
+              className="btn-outline-brand flex-1 sm:flex-initial flex items-center justify-center px-5 py-3 text-xs sm:text-sm rounded-xl hover:scale-[1.02] text-center"
             >
               See How It Works
             </a>
           </motion.div>
 
-          <div className="pt-4 border-t border-gray-900/65 flex flex-col sm:flex-row gap-3 items-center justify-center lg:justify-start text-[10px] font-semibold text-gray-500 uppercase tracking-wider">
-            <span className="flex items-center"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 mr-1.5 shrink-0" /> Most Trusted Software For Venues</span>
-            <span className="flex items-center"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 mr-1.5 shrink-0" /> Free Data Migration Support</span>
+          <div className="pt-4 border-t border-slate-200/80 flex flex-wrap gap-4 items-center justify-center lg:justify-start text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            <span className="flex items-center"><CheckCircle2 className="w-4 h-4 text-emerald-500 mr-1.5 shrink-0" /> MOST TRUSTED SOFTWARE</span>
+            <span className="flex items-center"><CheckCircle2 className="w-4 h-4 text-emerald-500 mr-1.5 shrink-0" /> FREE DATA MIGRATION</span>
           </div>
         </div>
 
-        {/* Right column: Floating Interactive Dashboard Mockup - scaled on mobile */}
-        <div className="lg:col-span-6 flex justify-center z-10">
+        {/* Right column: Google Analytics UI styled card mock */}
+        <div className="lg:col-span-7 flex justify-center z-10 w-full">
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative w-full max-w-[440px] sm:max-w-[500px] aspect-[4/3] rounded-xl sm:rounded-2xl border border-gray-800 bg-[#0f1422] shadow-2xl overflow-hidden p-2.5 sm:p-3"
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="relative w-full max-w-[580px] bg-white rounded-2xl border border-slate-200/80 shadow-xl overflow-hidden p-3.5 lift-on-hover"
           >
-            {/* Header frame */}
-            <div className="flex items-center justify-between pb-2 border-b border-gray-800">
+            {/* Window header */}
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex space-x-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
-                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
-                <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+                <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+                <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+                <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
               </div>
-              <span className="text-[8px] sm:text-[10px] font-semibold text-gray-600 font-mono">dashboard.venuepro.in</span>
-              <div className="w-8" />
+              <span className="text-[10px] font-bold text-slate-400 font-mono">analytics.venuepro.in</span>
+              <span className="px-2 py-0.5 bg-blue-50 text-[#107ed8] text-[9px] font-mono font-bold rounded">Live Monitor</span>
             </div>
 
-            {/* Mock Layout */}
-            <div className="grid grid-cols-12 gap-1.5 mt-2.5 h-[calc(100%-25px)]">
-              {/* Sidebar Mock */}
-              <div className="col-span-3 space-y-1.5 border-r border-gray-800/50 pr-1.5">
-                {[1, 2, 3, 4, 5].map(i => (
-                  <div key={i} className={`h-5 sm:h-6 rounded-md ${i === 1 ? 'bg-primary/20' : 'bg-gray-900/40'} flex items-center px-1.5`}>
-                    <div className={`w-2 h-2 rounded-full ${i === 1 ? 'bg-primary' : 'bg-gray-850'} mr-1.5 shrink-0`} />
-                    <div className={`h-1.5 rounded ${i === 1 ? 'bg-primary/50' : 'bg-gray-800/50'} w-10 sm:w-12`} />
+            {/* Dashboard Mock */}
+            <div className="grid grid-cols-12 gap-3 mt-3.5">
+              {/* Sidebar layout */}
+              <div className="col-span-3 space-y-2 border-r border-slate-100 pr-3">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className={`h-6 rounded-lg ${i === 1 ? 'bg-blue-50/80' : 'bg-slate-50/50'} flex items-center px-2`}>
+                    <div className={`w-1.5 h-1.5 rounded-full ${i === 1 ? 'bg-[#107ed8]' : 'bg-slate-300'} mr-2`} />
+                    <div className={`h-2 rounded ${i === 1 ? 'bg-[#107ed8]/40' : 'bg-slate-200'} w-12 sm:w-16`} />
                   </div>
                 ))}
               </div>
-              {/* Body Mock */}
-              <div className="col-span-9 space-y-2 pl-1">
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-1.5">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="bg-gray-900/60 border border-gray-800/50 rounded-lg p-1.5 flex flex-col justify-between h-10 sm:h-14">
-                      <div className="h-1.5 bg-gray-850 rounded w-8" />
-                      <div className="h-2.5 bg-gray-850 rounded w-10 mt-1" />
+              
+              {/* Main content pane */}
+              <div className="col-span-9 space-y-3 pl-1">
+                {/* Micro Stats */}
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { label: 'Weekly Active', val: '4,291', trend: '+14%' },
+                    { label: 'Filled Slots', val: '86%', trend: '+8%' },
+                    { label: 'Pending Collections', val: '₹14K', trend: '-22%' }
+                  ].map((stat, i) => (
+                    <div key={i} className="bg-slate-50/75 border border-slate-100 rounded-xl p-2 flex flex-col justify-between">
+                      <div className="text-[8px] font-extrabold uppercase tracking-wider text-slate-400">{stat.label}</div>
+                      <div className="flex justify-between items-baseline mt-1">
+                        <span className="text-xs sm:text-sm font-black text-slate-800 font-mono">{stat.val}</span>
+                        <span className="text-[8px] text-emerald-500 font-bold font-mono">{stat.trend}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
 
-                {/* Graph box */}
-                <div className="bg-gray-900/60 border border-gray-800/50 rounded-lg p-2 h-[95px] sm:h-[130px] flex items-end relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
-                  <div className="w-full h-full flex items-end gap-1 sm:gap-1.5">
-                    {[35, 60, 45, 75, 90, 65, 80, 55, 95].map((h, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ height: 0 }}
-                        animate={{ height: `${h}%` }}
-                        transition={{ duration: 1, delay: i * 0.05 }}
-                        className="flex-1 bg-gradient-to-t from-primary/80 to-blue-400/80 rounded-t"
-                      />
+                {/* Google Analytics Style Charts */}
+                <div className="bg-slate-50/50 border border-slate-100 rounded-xl p-3 h-[130px] sm:h-[150px] flex flex-col justify-between relative overflow-hidden">
+                  <div className="flex justify-between items-center text-[9px] text-slate-400 font-mono z-10">
+                    <span>Leads Traffic Channels (sessions)</span>
+                    <span className="text-slate-500 font-bold">14-Day rolling</span>
+                  </div>
+                  
+                  {/* Visual Chart Bars */}
+                  <div className="w-full h-[80px] flex items-end gap-1.5 sm:gap-2.5 z-10 pt-2">
+                    {[35, 55, 45, 75, 90, 65, 80, 50, 95, 70, 85, 110].map((h, i) => (
+                      <div key={i} className="flex-1 flex flex-col items-center justify-end h-full">
+                        <motion.div
+                          initial={{ height: 0 }}
+                          animate={{ height: `${h}%` }}
+                          transition={{ duration: 1, delay: i * 0.05 }}
+                          className={`w-full rounded-t ${i % 2 === 0 ? 'bg-[#107ed8]' : 'bg-[#C5A059]'}`}
+                        />
+                        <span className="text-[7px] font-mono text-slate-400 mt-1">{['M', 'T', 'W', 'T', 'F', 'S', 'S'][i % 7]}</span>
+                      </div>
                     ))}
+                  </div>
+
+                  {/* Grid background lines */}
+                  <div className="absolute inset-x-0 top-6 bottom-4 flex flex-col justify-between pointer-events-none opacity-50">
+                    <div className="border-t border-slate-200/50 w-full" />
+                    <div className="border-t border-slate-200/50 w-full" />
+                    <div className="border-t border-slate-200/50 w-full" />
                   </div>
                 </div>
               </div>
@@ -210,63 +235,61 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* PAIN POINTS SECTION */}
-      <section id="pain" className="py-12 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 border-t border-gray-900/60 relative">
+      {/* PAIN POINTS SECTION - Light Minimal Cards */}
+      <section id="pain" className="py-14 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 border-t border-slate-200/80 relative">
         <div className="text-center max-w-2xl mx-auto space-y-2 mb-10 sm:mb-16">
-          <span className="text-primary text-[10px] sm:text-xs font-bold uppercase tracking-widest">The Problem</span>
-          <h3 className="text-2xl sm:text-3xl font-bold text-white">Manual Venue Management is a Nightmare</h3>
-          <p className="text-gray-500 text-xs sm:text-sm">Juggling channels, leaking revenue, and coordinate checkout errors lead to business friction.</p>
+          <span className="text-primary text-[10px] sm:text-xs font-extrabold uppercase tracking-widest">The Operational Friction</span>
+          <h3 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">Manual Venue Management is a Nightmare</h3>
+          <p className="text-slate-500 text-xs sm:text-sm">Double bookings, uncollected balances, and communication gaps limit your banquet profit potential.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {PAIN_POINTS.map((pain, idx) => (
             <motion.div
               key={pain.title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1, duration: 0.4 }}
-              whileHover={{ y: -6, scale: 1.02 }}
-              className="bg-gray-950/40 border border-gray-900 rounded-xl sm:rounded-2xl p-5 sm:p-6 relative overflow-hidden group hover:border-gray-800 hover:shadow-lg hover:shadow-red-500/5 transition-all"
+              className="bg-white border border-slate-250/60 hover:border-slate-300 rounded-2xl p-6 relative overflow-hidden group transition-all hover:shadow-lg shadow-sm"
             >
-              <div className="absolute top-0 right-0 w-20 h-20 bg-red-500/5 rounded-full blur-xl pointer-events-none group-hover:bg-red-500/10 transition-colors" />
-              <div className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center font-bold text-xs mb-3.5">0{idx + 1}</div>
-              <h4 className="text-base sm:text-lg font-bold text-white mb-1.5">{pain.title}</h4>
-              <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">{pain.desc}</p>
+              <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/5 rounded-full blur-2xl pointer-events-none group-hover:bg-red-500/10 transition-colors" />
+              <div className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center font-bold text-xs mb-4">0{idx + 1}</div>
+              <h4 className="text-base sm:text-lg font-bold text-slate-900 mb-2">{pain.title}</h4>
+              <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">{pain.desc}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* FEATURES MATRIX SECTION */}
-      <section id="features" className="py-12 sm:py-20 bg-gray-950/50 border-t border-b border-gray-900/80 relative">
+      {/* FEATURES MATRIX SECTION - Light Gray grid */}
+      <section id="features" className="py-14 sm:py-24 bg-slate-100/60 border-t border-b border-slate-200/80 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
-          <div className="text-center max-w-2xl mx-auto space-y-2 mb-10 sm:mb-16">
-            <span className="text-primary text-[10px] sm:text-xs font-bold uppercase tracking-widest">Platform capabilities</span>
-            <h3 className="text-2xl sm:text-3xl font-bold text-white">Everything You Need to Succeed</h3>
-            <p className="text-gray-500 text-xs sm:text-sm">Industrial-grade tools designed specifically for multi-tenant venue networks.</p>
+          <div className="text-center max-w-2xl mx-auto space-y-2 mb-12 sm:mb-20">
+            <span className="text-primary text-[10px] sm:text-xs font-extrabold uppercase tracking-widest">Platform Capabilities</span>
+            <h3 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">Everything You Need to Scale</h3>
+            <p className="text-slate-500 text-xs sm:text-sm">Built-in safeguards, auto-scheduler mappings, and multi-tenant billing schemas.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
-            {FEATURES.map(feat => {
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {FEATURES.map((feat, idx) => {
               const Icon = feat.icon;
               return (
                 <motion.div
                   key={feat.title}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 15 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.4 }}
-                  whileHover={{ scale: 1.02, y: -4 }}
-                  className="bg-[#0f1422]/60 border border-gray-900/80 hover:border-primary/20 rounded-xl sm:rounded-2xl p-5 sm:p-6 relative overflow-hidden group transition-all hover:shadow-lg hover:shadow-primary/5"
+                  transition={{ duration: 0.4, delay: idx * 0.05 }}
+                  className="bg-white border border-slate-200/80 hover:border-slate-300 rounded-2xl p-6 relative overflow-hidden group transition-all hover:shadow-lg shadow-sm"
                 >
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-full blur-xl pointer-events-none group-hover:bg-primary/10 transition-colors" />
-                  <div className="w-9 h-9 sm:w-11 sm:h-11 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-3.5">
-                    <Icon className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-primary" />
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full blur-2xl pointer-events-none group-hover:bg-primary/10 transition-colors" />
+                  <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-4">
+                    <Icon className="w-5 h-5 text-primary" />
                   </div>
-                  <h4 className="text-base sm:text-lg font-bold text-white mb-1.5">{feat.title}</h4>
-                  <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{feat.desc}</p>
+                  <h4 className="text-base sm:text-lg font-bold text-slate-900 mb-2">{feat.title}</h4>
+                  <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">{feat.desc}</p>
                 </motion.div>
               );
             })}
@@ -275,77 +298,77 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* TESTIMONIALS SECTION */}
-      <section id="testimonials" className="py-12 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 relative">
+      {/* TESTIMONIALS SECTION - Light elegant quote block */}
+      <section id="testimonials" className="py-14 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 relative">
         <div className="text-center max-w-2xl mx-auto space-y-2 mb-10 sm:mb-16">
-          <span className="text-primary text-[10px] sm:text-xs font-bold uppercase tracking-widest">Success Stories</span>
-          <h3 className="text-2xl sm:text-3xl font-bold text-white">Loved by Indian Venue Owners</h3>
-          <p className="text-gray-500 text-xs sm:text-sm">See how banquet managers and resort owners scaled operations with VenuePro.</p>
+          <span className="text-[#C5A059] text-[10px] sm:text-xs font-extrabold uppercase tracking-widest">SUCCESS STORIES</span>
+          <h3 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">Approved by Elite Venue Operators</h3>
+          <p className="text-slate-500 text-xs sm:text-sm">See how banquet managers and resort owners restored operational integrity.</p>
         </div>
 
-        <div className="bg-gray-950/40 border border-gray-900 rounded-2xl sm:rounded-3xl p-6 sm:p-12 max-w-3xl mx-auto relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-24 h-24 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="bg-white border border-slate-200/80 rounded-3xl p-8 sm:p-12 max-w-3xl mx-auto relative overflow-hidden shadow-md">
+          <div className="absolute top-0 left-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="flex space-x-1 text-yellow-500 mb-4 sm:mb-6">
-            {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-3.5 h-3.5 fill-current" />)}
+          <div className="flex space-x-1 text-[#C5A059] mb-5">
+            {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-4 h-4 fill-current" />)}
           </div>
 
           <AnimatePresence mode="wait">
             <motion.div
               key={currentTestimonial}
-              initial={{ opacity: 0, x: 15 }}
+              initial={{ opacity: 0, x: 12 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -15 }}
+              exit={{ opacity: 0, x: -12 }}
               transition={{ duration: 0.25 }}
-              className="space-y-4 sm:space-y-6"
+              className="space-y-5"
             >
-              <p className="text-gray-300 text-base sm:text-xl leading-relaxed italic">
+              <p className="text-slate-800 text-base sm:text-xl leading-relaxed font-medium italic">
                 "{TESTIMONIALS[currentTestimonial].text}"
               </p>
               <div>
-                <p className="font-bold text-white text-sm sm:text-base">{TESTIMONIALS[currentTestimonial].name}</p>
-                <p className="text-[10px] sm:text-xs text-gray-500 font-medium">{TESTIMONIALS[currentTestimonial].role}</p>
+                <p className="font-extrabold text-slate-900 text-sm sm:text-base">{TESTIMONIALS[currentTestimonial].name}</p>
+                <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">{TESTIMONIALS[currentTestimonial].role}</p>
               </div>
             </motion.div>
           </AnimatePresence>
 
           {/* Testimonial Nav dots */}
-          <div className="flex space-x-2 mt-6 sm:mt-8">
+          <div className="flex space-x-2 mt-8">
             {TESTIMONIALS.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentTestimonial(idx)}
-                className={`w-2 h-2 rounded-full transition-all ${currentTestimonial === idx ? 'bg-primary w-5' : 'bg-gray-800 hover:bg-gray-700'}`}
+                className={`w-2.5 h-2.5 rounded-full transition-all ${currentTestimonial === idx ? 'bg-primary w-6' : 'bg-slate-200 hover:bg-slate-350'}`}
               />
             ))}
           </div>
         </div>
       </section>
 
-      {/* FAQ SECTION */}
-      <section id="faqs" className="py-12 sm:py-20 bg-gray-950/30 border-t border-gray-900/60 relative">
+      {/* FAQ SECTION - Clean Accoridon */}
+      <section id="faqs" className="py-14 sm:py-24 bg-slate-100/60 border-t border-slate-200/80 relative">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
 
           <div className="text-center space-y-2 mb-10 sm:mb-16">
-            <span className="text-primary text-[10px] sm:text-xs font-bold uppercase tracking-widest">Got Questions?</span>
-            <h3 className="text-2xl sm:text-3xl font-bold text-white">Frequently Asked Questions</h3>
-            <p className="text-gray-500 text-xs sm:text-sm">Everything you need to know to get started with VenuePro.</p>
+            <span className="text-primary text-[10px] sm:text-xs font-extrabold uppercase tracking-widest">FAQ</span>
+            <h3 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">Answers to Common Questions</h3>
+            <p className="text-slate-500 text-xs sm:text-sm">Everything you need to know to get started with VenuePro.</p>
           </div>
 
-          <div className="space-y-3.5">
+          <div className="space-y-3">
             {FAQS.map((faq, idx) => {
               const isOpen = activeFaq === idx;
               return (
                 <div
                   key={idx}
-                  className="bg-[#0f1422]/40 border border-gray-900 rounded-xl overflow-hidden transition-all"
+                  className="bg-white border border-slate-200/85 rounded-xl overflow-hidden transition-all shadow-sm"
                 >
                   <button
                     onClick={() => setActiveFaq(isOpen ? null : idx)}
-                    className="w-full px-5 py-3.5 sm:px-6 sm:py-4 flex items-center justify-between font-bold text-xs sm:text-sm text-left hover:text-white transition-colors"
+                    className="w-full px-5 py-4 flex items-center justify-between font-bold text-xs sm:text-sm text-left hover:text-primary transition-colors text-slate-800"
                   >
                     <span>{faq.q}</span>
-                    <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform shrink-0 ml-3 ${isOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform shrink-0 ml-3 ${isOpen ? 'rotate-180' : ''}`} />
                   </button>
 
                   <AnimatePresence initial={false}>
@@ -357,7 +380,7 @@ export const LandingPage: React.FC = () => {
                         transition={{ duration: 0.2 }}
                         className="overflow-hidden"
                       >
-                        <div className="px-5 pb-4.5 pt-0.5 sm:px-6 sm:pb-5 text-gray-400 text-xs sm:text-sm leading-relaxed border-t border-gray-900/60">
+                        <div className="px-5 pb-4.5 pt-1 text-slate-500 text-xs sm:text-sm leading-relaxed border-t border-slate-100">
                           {faq.a}
                         </div>
                       </motion.div>
@@ -371,42 +394,41 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* VENUE TYPES SECTION */}
-      <section className="py-12 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 border-t border-gray-900/60 relative">
+      {/* VENUE TYPES SECTION - Light Adaptable Cards */}
+      <section className="py-14 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 border-t border-slate-200/85 relative">
         <div className="text-center max-w-2xl mx-auto space-y-2 mb-10 sm:mb-16">
-          <span className="text-primary text-[10px] sm:text-xs font-bold uppercase tracking-widest">Perfect for Every Venue</span>
-          <h3 className="text-2xl sm:text-3xl font-bold text-white">VenuePro Adapts to Your Business</h3>
-          <p className="text-gray-500 text-xs sm:text-sm">Whether you run a single hall or a chain of resorts, we've got you covered.</p>
+          <span className="text-primary text-[10px] sm:text-xs font-extrabold uppercase tracking-widest">Adaptable Design</span>
+          <h3 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">VenuePro Adapts to Your Business</h3>
+          <p className="text-slate-500 text-xs sm:text-sm">Whether you run a single banquet hall or a chain of resorts, we've got you covered.</p>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {VENUE_TYPES.map((vt, idx) => (
             <motion.div
               key={vt.title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1, duration: 0.4 }}
-              whileHover={{ y: -4, scale: 1.02 }}
-              className="bg-gradient-to-b from-gray-900/60 to-gray-950/40 border border-gray-800/80 hover:border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 text-center transition-all group"
+              className="bg-white border border-slate-200/80 hover:border-primary/20 rounded-2xl p-5 text-center transition-all group shadow-sm hover:shadow-lg"
             >
-              <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                <span className="text-lg font-black">{vt.title.charAt(0)}</span>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3">
+                <span className="text-base font-extrabold">{vt.title.charAt(0)}</span>
               </div>
-              <h4 className="text-sm sm:text-base font-bold text-white mb-1.5">{vt.title}</h4>
-              <p className="text-gray-500 text-[10px] sm:text-xs leading-relaxed">{vt.desc}</p>
+              <h4 className="text-sm sm:text-base font-bold text-slate-900 mb-1.5">{vt.title}</h4>
+              <p className="text-slate-400 text-[10px] sm:text-xs leading-relaxed">{vt.desc}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
       {/* ONBOARDING STEPS */}
-      <section className="py-12 sm:py-20 bg-gray-950/50 border-t border-gray-900/60">
+      <section className="py-14 sm:py-24 bg-slate-100/60 border-t border-slate-200/80">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto space-y-2 mb-10 sm:mb-16">
-            <span className="text-primary text-[10px] sm:text-xs font-bold uppercase tracking-widest">Getting Started</span>
-            <h3 className="text-2xl sm:text-3xl font-bold text-white">From Signup to Going Live</h3>
-            <p className="text-gray-500 text-xs sm:text-sm">We make it effortless — 3 simple steps.</p>
+            <span className="text-primary text-[10px] sm:text-xs font-extrabold uppercase tracking-widest">Getting Started</span>
+            <h3 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">From Signup to Going Live</h3>
+            <p className="text-slate-500 text-xs sm:text-sm">We make it effortless — 3 simple steps.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
@@ -416,89 +438,80 @@ export const LandingPage: React.FC = () => {
             ].map((s, i) => (
               <motion.div
                 key={s.step}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15, duration: 0.5 }}
-                className="text-center sm:text-left space-y-3"
+                className="text-center sm:text-left space-y-3 bg-white p-6 rounded-2xl border border-slate-200/70 shadow-sm"
               >
-                <div className="w-12 h-12 mx-auto sm:mx-0 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-lg">{s.step}</div>
-                <h4 className="text-base sm:text-lg font-bold text-white">{s.title}</h4>
-                <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">{s.desc}</p>
+                <div className="w-11 h-11 mx-auto sm:mx-0 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-extrabold text-sm">{s.step}</div>
+                <h4 className="text-base sm:text-lg font-bold text-slate-900">{s.title}</h4>
+                <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">{s.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA FOOTER BANNER */}
-      <section className="relative py-16 sm:py-24 overflow-hidden border-t border-gray-900/80">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-blue-500/5 to-transparent pointer-events-none blur-3xl" />
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-4 sm:space-y-6 relative z-10"
-        >
-          <h3 className="text-2xl sm:text-4xl font-bold text-white">Ready to Transform Your Venue Management?</h3>
-          <p className="text-gray-400 text-xs sm:text-sm leading-relaxed max-w-xl mx-auto">
-            Join hundreds of venue owners who have simplified their operations and grown their business with VenuePro.
+      {/* CTA FOOTER BANNER - Soft blue gradient */}
+      <section className="relative py-16 sm:py-24 overflow-hidden border-t border-slate-200/80 bg-gradient-to-r from-blue-50 via-indigo-50/30 to-transparent">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-5 relative z-10">
+          <h3 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Ready to Transform Your Venue Management?</h3>
+          <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-xl mx-auto">
+            Join hundreds of Indian venue owners who have simplified their operations and grown their business with VenuePro.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
             <Link
               to="/signup"
-              className="btn-primary inline-flex items-center px-6 py-2.5 sm:px-8 sm:py-3 text-xs sm:text-sm rounded-xl"
+              className="btn-brand px-7 py-3 text-xs sm:text-sm rounded-xl inline-flex items-center font-bold"
             >
               List Your Venue Now <ArrowRight className="w-4 h-4 ml-1.5 shrink-0" />
             </Link>
-            <a href="#features" className="text-xs sm:text-sm font-bold text-gray-400 hover:text-white transition-colors">
+            <a href="#features" className="text-xs sm:text-sm font-bold text-slate-500 hover:text-slate-800 transition-colors">
               See How It Works →
             </a>
           </div>
-        </motion.div>
+        </div>
       </section>
 
-      {/* RICH MULTI-COLUMN FOOTER */}
-      <footer className="bg-[#060a14] py-12 sm:py-16 border-t border-gray-900/60">
+      {/* FOOTER */}
+      <footer className="bg-slate-950 text-slate-450 py-12 border-t border-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-
-          {/* Top row: Logo + tagline */}
-          <div className="flex flex-col md:flex-row justify-between gap-8 mb-10 sm:mb-12">
+          <div className="flex flex-col md:flex-row justify-between gap-8 mb-10 text-xs">
             <div className="space-y-3 max-w-xs">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center font-bold text-white text-sm shadow-lg shadow-primary/20">V</div>
-                <span className="font-bold text-lg tracking-tight text-white">VenuePro</span>
+                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center font-bold text-white text-sm shadow-lg shadow-primary/20">VP</div>
+                <span className="font-extrabold text-lg tracking-tight text-white">VenuePro</span>
               </div>
-              <p className="text-gray-500 text-xs leading-relaxed">Making venue management simple and efficient. Manage Smarter, Grow Faster.</p>
+              <p className="text-slate-400 text-xs leading-relaxed">Making venue management simple and efficient. Manage Smarter, Grow Faster.</p>
             </div>
 
-            {/* Footer columns */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 text-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
               <div className="space-y-3">
-                <h5 className="font-bold text-gray-300 uppercase tracking-wider text-[10px]">Product</h5>
-                <ul className="space-y-2 text-gray-500">
+                <h5 className="font-bold text-slate-300 uppercase tracking-wider text-[10px]">Product</h5>
+                <ul className="space-y-2 text-slate-450">
                   <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
                   <li><a href="#pain" className="hover:text-white transition-colors">Why VenuePro</a></li>
                   <li><a href="#faqs" className="hover:text-white transition-colors">FAQ</a></li>
                 </ul>
               </div>
               <div className="space-y-3">
-                <h5 className="font-bold text-gray-300 uppercase tracking-wider text-[10px]">Resources</h5>
-                <ul className="space-y-2 text-gray-500">
+                <h5 className="font-bold text-slate-300 uppercase tracking-wider text-[10px]">Resources</h5>
+                <ul className="space-y-2 text-slate-450">
                   <li><Link to="/signup" className="hover:text-white transition-colors">Get Started</Link></li>
                   <li><a href="#testimonials" className="hover:text-white transition-colors">Success Stories</a></li>
                 </ul>
               </div>
               <div className="space-y-3">
-                <h5 className="font-bold text-gray-300 uppercase tracking-wider text-[10px]">Company</h5>
-                <ul className="space-y-2 text-gray-500">
+                <h5 className="font-bold text-slate-300 uppercase tracking-wider text-[10px]">Company</h5>
+                <ul className="space-y-2 text-slate-450">
                   <li><Link to="/login" className="hover:text-white transition-colors">Log In</Link></li>
                   <li><Link to="/signup" className="hover:text-white transition-colors">Sign Up</Link></li>
                 </ul>
               </div>
               <div className="space-y-3">
-                <h5 className="font-bold text-gray-300 uppercase tracking-wider text-[10px]">Legal</h5>
-                <ul className="space-y-2 text-gray-500">
+                <h5 className="font-bold text-slate-300 uppercase tracking-wider text-[10px]">Legal</h5>
+                <ul className="space-y-2 text-slate-450">
                   <li><Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
                   <li><Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
                 </ul>
@@ -506,10 +519,9 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Bottom bar */}
-          <div className="pt-6 border-t border-gray-900/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] sm:text-xs text-gray-600">
+          <div className="pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-slate-500">
             <p>© 2026 VenuePro. All rights reserved. Made with ❤️ in India.</p>
-            <p className="text-gray-700">Manage Smarter. Grow Faster.</p>
+            <p className="text-slate-600">Manage Smarter. Grow Faster.</p>
           </div>
         </div>
       </footer>

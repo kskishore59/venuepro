@@ -160,13 +160,122 @@ export const DataImport: React.FC<DataImportProps> = ({ type, onClose }) => {
       return date.toISOString().split("T")[0];
     }
     const str = String(val).trim();
-    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+    if (!str) return null;
 
+    // 1. Try parsing DD/MM/YYYY or DD-MM-YYYY or DD.MM.YYYY
+    // e.g. 27/05/2026 or 27-05-2026 or 27.05.2026
+    const ddMMyyyyMatch = str.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$/);
+    if (ddMMyyyyMatch) {
+      const day = parseInt(ddMMyyyyMatch[1], 10);
+      const month = parseInt(ddMMyyyyMatch[2], 10);
+      const year = parseInt(ddMMyyyyMatch[3], 10);
+      if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+        return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      }
+    }
+
+    // 2. Try parsing DD/MM/YY or DD-MM-YY or DD.MM.YY
+    // e.g. 27/05/26 or 27-05-26 or 27.05.26
+    const ddMMyyMatch = str.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2})$/);
+    if (ddMMyyMatch) {
+      const day = parseInt(ddMMyyMatch[1], 10);
+      const month = parseInt(ddMMyyMatch[2], 10);
+      let yearShort = parseInt(ddMMyyMatch[3], 10);
+      const year = yearShort < 50 ? 2000 + yearShort : 1900 + yearShort;
+      if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+        return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      }
+    }
+
+    // 3. Try parsing YYYY/MM/DD or YYYY-MM-DD or YYYY.MM.DD
+    // e.g. 2026/05/27 or 2026-05-27
+    const yyyyMMddMatch = str.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/);
+    if (yyyyMMddMatch) {
+      const year = parseInt(yyyyMMddMatch[1], 10);
+      const month = parseInt(yyyyMMddMatch[2], 10);
+      const day = parseInt(yyyyMMddMatch[3], 10);
+      if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+        return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      }
+    }
+
+    // 4. Fallback to native Date parsing (handles "May 27, 2026", "27 May 2026", etc.)
     const date = new Date(str);
     if (!isNaN(date.getTime())) {
       return date.toISOString().split("T")[0];
     }
     return null;
+  };
+
+  const parseExcelTime = (val: any): string | null => {
+    if (!val && val !== 0) return null;
+    if (typeof val === "number") {
+      // If it's an Excel time serial number (fraction of a 24-hour day)
+      if (val >= 0 && val < 1) {
+        const totalSeconds = Math.round(val * 86400);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+      }
+      // If it's represented as a number like 930 or 1800
+      if (val >= 100 && val <= 2400) {
+        const hours = Math.floor(val / 100);
+        const minutes = val % 100;
+        return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+      }
+    }
+    
+    let str = String(val).trim().toUpperCase();
+    if (!str) return null;
+
+    // Handle formats like "09:30 AM", "9:30 PM", "9 AM", "9.30 PM"
+    const ampmMatch = str.match(/^(\d{1,2})[:.]?(\d{2})?\s*(AM|PM)$/i);
+    if (ampmMatch) {
+      let hours = parseInt(ampmMatch[1], 10);
+      const minutes = ampmMatch[2] ? parseInt(ampmMatch[2], 10) : 0;
+      const ampm = ampmMatch[3].toUpperCase();
+      if (ampm === "PM" && hours < 12) hours += 12;
+      if (ampm === "AM" && hours === 12) hours = 0;
+      return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+    }
+
+    // Handle 24 hour formats with seconds "14:30:00"
+    const time24MatchSec = str.match(/^(\d{1,2})[:.](\d{2})[:.](\d{2})$/);
+    if (time24MatchSec) {
+      const hours = parseInt(time24MatchSec[1], 10);
+      const minutes = parseInt(time24MatchSec[2], 10);
+      if (hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60) {
+        return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+      }
+    }
+
+    // Handle standard 24 hour formats like "14:30" or "09:15" or "14.30"
+    const time24Match = str.match(/^(\d{1,2})[:.](\d{2})$/);
+    if (time24Match) {
+      const hours = parseInt(time24Match[1], 10);
+      const minutes = parseInt(time24Match[2], 10);
+      if (hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60) {
+        return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+      }
+    }
+
+    // Handle simple integer hours like "9" or "14" or "18"
+    if (/^\d{1,2}$/.test(str)) {
+      const hours = parseInt(str, 10);
+      if (hours >= 0 && hours < 24) {
+        return `${String(hours).padStart(2, "0")}:00`;
+      }
+    }
+
+    return null;
+  };
+
+  const parseNumeric = (val: any): number | null => {
+    if (val === undefined || val === null || val === "") return null;
+    if (typeof val === "number") return val;
+    const cleaned = String(val).replace(/,/g, "").trim();
+    const num = Number(cleaned);
+    return isNaN(num) ? null : num;
   };
 
   const importData = async () => {
@@ -194,28 +303,29 @@ export const DataImport: React.FC<DataImportProps> = ({ type, onClose }) => {
             errors.push(`Row ${i + 2}: Missing required field (name or phone)`);
             continue;
           }
+          const leadStatus = row.status ? String(row.status).trim().toLowerCase() : "new";
+          const validLeadStatuses = [
+            "new",
+            "contacted",
+            "visit_scheduled",
+            "proposal_sent",
+            "negotiating",
+            "won",
+            "lost",
+          ];
           const { error } = await supabase.from("leads").insert({
+            id: crypto.randomUUID(),
             org_id: organization.id,
             name: String(row.name).trim(),
             phone: normalizePhone(row.phone),
             email: row.email ? String(row.email).trim() : null,
             source: row.source || "import",
-            status: [
-              "new",
-              "contacted",
-              "visit_scheduled",
-              "proposal_sent",
-              "negotiating",
-              "won",
-              "lost",
-            ].includes(row.status)
-              ? row.status
-              : "new",
+            status: validLeadStatuses.includes(leadStatus) ? leadStatus : "new",
             event_type: row.event_type || null,
-            tentative_date: parseExcelDate(row.tentative_date) || null,
-            guest_count: row.guest_count ? Number(row.guest_count) : null,
-            budget_from: row.budget_from ? Number(row.budget_from) : null,
-            budget_to: row.budget_to ? Number(row.budget_to) : null,
+            tentative_date: parseExcelDate(row.tentative_date),
+            guest_count: parseNumeric(row.guest_count),
+            budget_from: parseNumeric(row.budget_from) ? parseNumeric(row.budget_from)! * 100 : null,
+            budget_to: parseNumeric(row.budget_to) ? parseNumeric(row.budget_to)! * 100 : null,
             notes: row.notes || null,
           });
           if (error) {
@@ -280,6 +390,7 @@ export const DataImport: React.FC<DataImportProps> = ({ type, onClose }) => {
               const { data: newCustomer, error: custErr } = await supabase
                 .from("customers")
                 .insert({
+                  id: crypto.randomUUID(),
                   org_id: organization.id,
                   name,
                   phone: normalized,
@@ -298,10 +409,9 @@ export const DataImport: React.FC<DataImportProps> = ({ type, onClose }) => {
               customerCache.set(normalized, customerId);
             }
           }
-
           const parsedDate = parseExcelDate(row.event_date);
           if (!parsedDate) {
-            errors.push(`Row ${i + 2}: Invalid event_date format`);
+            errors.push(`Row ${i + 2}: Invalid event_date format (value: "${row.event_date}")`);
             continue;
           }
 
@@ -313,24 +423,27 @@ export const DataImport: React.FC<DataImportProps> = ({ type, onClose }) => {
             "completed",
             "cancelled",
           ];
-          const totalAmount = Number(row.total_amount) || 0;
-          const advanceAmount = Number(row.advance_amount) || 0;
-          const balanceAmount = Number(totalAmount - advanceAmount) || 0;
+          const statusStr = row.status ? String(row.status).trim().toLowerCase() : "";
+          
+          const totalAmount = (parseNumeric(row.total_amount) || 0) * 100;
+          const advanceAmount = (parseNumeric(row.advance_amount) || 0) * 100;
+          const balanceAmount = totalAmount - advanceAmount;
 
           const { error: bookErr } = await supabase.from("bookings").insert({
+            id: crypto.randomUUID(),
             org_id: organization.id,
             customer_id: customerId,
             hall_id: row.hall_id || defaultHallId,
             event_type: row.event_type || "other",
             event_date: parsedDate,
-            start_time: row.start_time || null,
-            end_time: row.end_time || null,
-            guest_count: row.guest_count ? Number(row.guest_count) : null,
+            start_time: parseExcelTime(row.start_time),
+            end_time: parseExcelTime(row.end_time),
+            guest_count: parseNumeric(row.guest_count),
             total_amount: totalAmount,
             advance_amount: advanceAmount,
             balance_amount: balanceAmount,
-            status: validStatuses.includes(row.status)
-              ? row.status
+            status: validStatuses.includes(statusStr)
+              ? statusStr
               : "confirmed",
             special_requirements: row.special_requirements || null,
             internal_notes:
@@ -389,9 +502,9 @@ export const DataImport: React.FC<DataImportProps> = ({ type, onClose }) => {
       </div>
 
       {/* Step 1: Download Sample */}
-      <div className="card-elevated p-5 space-y-3">
+      <div className="card-elevated p-5 space-y-3 transition-all duration-300 hover:shadow-md hover:border-primary/20 border border-transparent group">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
             <FileSpreadsheet className="w-4 h-4" />
           </div>
           <div>
@@ -405,7 +518,7 @@ export const DataImport: React.FC<DataImportProps> = ({ type, onClose }) => {
         </div>
         <button
           onClick={downloadSample}
-          className="btn-primary px-4 py-2 text-xs flex items-center space-x-2"
+          className="btn-primary px-4 py-2 text-xs flex items-center space-x-2 transition-transform duration-300 active:scale-95"
         >
           <Download className="w-3.5 h-3.5" />
           <span>

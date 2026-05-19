@@ -6,10 +6,11 @@ import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
 import {
   Save, Building, CreditCard, Shield, Users,
-  AlertOctagon, Check, X, Upload, Loader2, Sparkles
+  AlertOctagon, Check, X, Upload, Loader2, Sparkles, Activity
 } from 'lucide-react';
 import { SEO } from '../components/ui/SEO';
 import { DataImport } from '../components/import/DataImport';
+import { AuditLogViewer } from '../components/settings/AuditLogViewer';
 import { useSubscription } from '../hooks/useSubscription';
 
 // Default matrix for role permissions
@@ -22,7 +23,7 @@ const DEFAULT_PERMISSIONS = {
 export const Settings: React.FC = () => {
   const { organization } = useAuth();
   const queryClient = useQueryClient();
-  const [activePanel, setActivePanel] = useState<'profile' | 'security' | 'staff' | 'import' | 'billing'>('profile');
+  const [activePanel, setActivePanel] = useState<'profile' | 'security' | 'staff' | 'import' | 'billing' | 'audit'>('profile');
 
   const { register, handleSubmit, reset, watch, setValue } = useForm({
     defaultValues: organization || {}
@@ -128,7 +129,7 @@ export const Settings: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-16">
+    <div className="space-y-6 max-w-6xl mx-auto pb-16">
       <SEO title="System Settings" description="Configure organization profile, Indian GST tax schedules, role-based permission grids, and venue staff mappings." />
 
       <div>
@@ -140,11 +141,12 @@ export const Settings: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
         {/* Sidebar Nav */}
-        <div className="space-y-1 bg-white p-3 rounded-2xl border border-gray-200 shadow-sm h-fit">
+        <div className="space-y-3 bg-white p-3 rounded-2xl border border-gray-200 shadow-sm h-fit">
           {[
             { id: 'profile', label: 'Organization Profile', icon: Building },
             { id: 'security', label: 'Access & Role Matrix', icon: Shield },
-            { id: 'staff', label: 'Venue Staff Assignments', icon: Users },
+            { id: 'staff', label: 'Staff Assignments', icon: Users },
+            { id: 'audit', label: 'Audit Logs', icon: Activity },
             { id: 'import', label: 'Import Previous Data', icon: Upload },
             { id: 'billing', label: 'Billing & Subscriptions', icon: CreditCard }
           ].map(item => {
@@ -155,8 +157,8 @@ export const Settings: React.FC = () => {
                 type="button"
                 onClick={() => setActivePanel(item.id as any)}
                 className={`w-full flex items-center space-x-3 px-4 py-2.5 text-sm font-semibold rounded-xl transition-all ${activePanel === item.id
-                    ? 'bg-primary/10 text-primary'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                   }`}
               >
                 <Icon className="w-4 h-4" />
@@ -297,8 +299,8 @@ export const Settings: React.FC = () => {
                                     type="button"
                                     onClick={() => handlePermissionToggle(role, perm.id)}
                                     className={`w-6 h-6 rounded-md flex items-center justify-center border mx-auto transition-all ${isChecked
-                                        ? 'bg-primary border-primary text-white scale-110 shadow-sm'
-                                        : 'border-gray-300 hover:border-gray-400 bg-white'
+                                      ? 'bg-primary border-primary text-white scale-110 shadow-sm'
+                                      : 'border-gray-300 hover:border-gray-400 bg-white'
                                       }`}
                                   >
                                     {isChecked && <Check className="w-3.5 h-3.5" />}
@@ -556,6 +558,11 @@ export const Settings: React.FC = () => {
 
             {/* PANEL 5: BILLING & SUBSCRIPTIONS */}
             {activePanel === 'billing' && <BillingPanel />}
+
+            {/* PANEL 6: AUDIT LOGS */}
+            {activePanel === 'audit' && (
+              <AuditLogViewer />
+            )}
           </form>
         </div>
 
@@ -633,7 +640,7 @@ const BillingPanel: React.FC = () => {
   const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
-    
+
     try {
       const userRes = await supabase.auth.getUser();
       const userId = userRes.data.user?.id;
@@ -697,11 +704,11 @@ const BillingPanel: React.FC = () => {
 
       setPaymentSuccess(true);
       toast.success(`Successfully subscribed to ${checkoutPlan.name}!`);
-      
+
       // Invalidate subscription states
       queryClient.invalidateQueries({ queryKey: ['org-settings'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-      
+
       setTimeout(() => {
         setShowCheckout(false);
         setCheckoutPlan(null);
@@ -713,7 +720,7 @@ const BillingPanel: React.FC = () => {
         await supabase.from('organizations').update({
           plan: checkoutPlan.id
         }).eq('id', organization?.id || '');
-        
+
         setPaymentSuccess(true);
         toast.success(`Subscription simulation successful!`);
         queryClient.invalidateQueries({ queryKey: ['org-settings'] });
@@ -777,17 +784,16 @@ const BillingPanel: React.FC = () => {
       {/* Plans grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {PLANS.map((plan) => {
-          const isCurrent = organization?.plan === plan.id || 
+          const isCurrent = organization?.plan === plan.id ||
             (plan.id === "starter" && subInfo.planName.toLowerCase().includes("starter")) ||
             (plan.id === "growth" && subInfo.planName.toLowerCase().includes("growth")) ||
             (plan.id === "enterprise" && subInfo.planName.toLowerCase().includes("enterprise"));
 
           return (
-            <div 
+            <div
               key={plan.id}
-              className={`bg-white rounded-2xl border transition-all flex flex-col p-6 relative ${
-                plan.popular ? "border-[#107ed8] shadow-md ring-2 ring-[#107ed8]/10" : "border-gray-200 shadow-sm"
-              }`}
+              className={`bg-white rounded-2xl border transition-all flex flex-col p-6 relative ${plan.popular ? "border-[#107ed8] shadow-md ring-2 ring-[#107ed8]/10" : "border-gray-200 shadow-sm"
+                }`}
             >
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#107ed8] text-white text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full flex items-center space-x-1">
@@ -821,13 +827,12 @@ const BillingPanel: React.FC = () => {
                 type="button"
                 onClick={() => handleSubscribeClick(plan)}
                 disabled={isCurrent}
-                className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all mt-auto ${
-                  isCurrent 
-                    ? "bg-gray-100 text-gray-500 cursor-default border border-transparent" 
-                    : plan.popular 
-                      ? "bg-[#107ed8] hover:bg-[#107ed8]/90 text-white shadow-md shadow-[#107ed8]/20" 
-                      : "border border-gray-300 text-gray-700 hover:bg-gray-50"
-                }`}
+                className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all mt-auto ${isCurrent
+                  ? "bg-gray-100 text-gray-500 cursor-default border border-transparent"
+                  : plan.popular
+                    ? "bg-[#107ed8] hover:bg-[#107ed8]/90 text-white shadow-md shadow-[#107ed8]/20"
+                    : "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                  }`}
               >
                 {isCurrent ? "Current Plan" : "Upgrade Plan"}
               </button>
@@ -841,7 +846,7 @@ const BillingPanel: React.FC = () => {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-gray-100 overflow-hidden animate-zoomIn">
             <div className="bg-gradient-to-r from-primary to-blue-700 p-6 text-white relative">
-              <button 
+              <button
                 type="button"
                 onClick={() => setShowCheckout(false)}
                 className="absolute top-4 right-4 text-white/80 hover:text-white"
@@ -868,11 +873,11 @@ const BillingPanel: React.FC = () => {
               <div className="p-6 space-y-4">
                 <div className="space-y-1">
                   <label className="block text-xs font-bold text-gray-500 uppercase">Cardholder Name</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     id="simCardholder"
-                    required 
-                    placeholder="E.g. Rahul Sharma" 
+                    required
+                    placeholder="E.g. Rahul Sharma"
                     className="w-full px-3.5 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                   />
                 </div>
@@ -880,11 +885,11 @@ const BillingPanel: React.FC = () => {
                 <div className="space-y-1">
                   <label className="block text-xs font-bold text-gray-500 uppercase">Credit Card Details</label>
                   <div className="relative">
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       id="simCardnumber"
-                      required 
-                      placeholder="4242 4242 4242 4242" 
+                      required
+                      placeholder="4242 4242 4242 4242"
                       className="w-full pl-3.5 pr-10 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-mono"
                     />
                     <CreditCard className="absolute right-3.5 top-2.5 text-gray-400 w-4 h-4" />
@@ -894,22 +899,22 @@ const BillingPanel: React.FC = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="block text-xs font-bold text-gray-500 uppercase">Expiry Date</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       id="simExpiry"
-                      required 
-                      placeholder="MM/YY" 
+                      required
+                      placeholder="MM/YY"
                       className="w-full px-3.5 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-mono"
                     />
                   </div>
                   <div className="space-y-1">
                     <label className="block text-xs font-bold text-gray-500 uppercase">CVV Code</label>
-                    <input 
-                      type="password" 
+                    <input
+                      type="password"
                       id="simCvv"
-                      required 
+                      required
                       maxLength={3}
-                      placeholder="***" 
+                      placeholder="***"
                       className="w-full px-3.5 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-mono"
                     />
                   </div>
@@ -941,6 +946,7 @@ const BillingPanel: React.FC = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };

@@ -8,6 +8,9 @@ export interface Organization {
   settings?: Record<string, any>;
   plan: string;
   created_at?: string;
+  updated_at?: string;
+  deleted_at?: string;
+  version?: number;
 }
 
 export interface Profile {
@@ -16,6 +19,10 @@ export interface Profile {
   full_name: string;
   role: 'owner' | 'manager' | 'booking_staff' | 'finance_staff' | 'operations_staff';
   phone?: string;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string;
+  version?: number;
 }
 
 export interface Venue {
@@ -27,6 +34,9 @@ export interface Venue {
   description?: string;
   primary_photo?: string;
   created_at?: string;
+  updated_at?: string;
+  deleted_at?: string;
+  version?: number;
 }
 
 export interface Hall {
@@ -58,6 +68,10 @@ export interface Hall {
     tour_url?: string;
     video_url?: string;
   };
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string;
+  version?: number;
 }
 
 export interface Customer {
@@ -71,15 +85,20 @@ export interface Customer {
   pan?: string;
   tags?: string[];
   created_at?: string;
+  updated_at?: string;
+  deleted_at?: string;
+  version?: number;
 }
 
 export interface Booking {
   id: string;
   org_id: string;
+  group_id?: string;
   hall_id: string;
   customer_id: string;
   event_type: 'wedding' | 'reception' | 'engagement' | 'mehendi' | 'haldi' | 'sangeet' | 'birthday' | 'anniversary' | 'corporate' | 'conference' | 'pooja' | 'other';
   event_date: string;
+  time_range?: string; // TSTZRANGE
   start_time?: string;
   end_time?: string;
   setup_start_time?: string;
@@ -91,8 +110,14 @@ export interface Booking {
   status: 'inquiry' | 'hold' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
   total_amount: number;
   advance_amount: number;
+  expires_at?: string;
+  beo_details?: Record<string, any>;
   halls?: Hall;
   customers?: Customer;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string;
+  version?: number;
 }
 
 export interface Payment {
@@ -110,6 +135,9 @@ export interface Payment {
   status: string;
   receipt_url?: string;
   created_at: string;
+  updated_at?: string;
+  deleted_at?: string;
+  version?: number;
   bookings?: Booking;
 }
 
@@ -132,6 +160,9 @@ export interface Lead {
   last_contact_date?: string;
   lost_reason?: string;
   created_at: string;
+  updated_at?: string;
+  deleted_at?: string;
+  version?: number;
 }
 
 export interface ActivityLog {
@@ -141,4 +172,45 @@ export interface ActivityLog {
   description: string;
   created_at: string;
   created_by?: string;
+}
+
+export interface BookingGroup {
+  id: string;
+  org_id: string;
+  customer_id: string;
+  title: string;
+  total_budget?: number;
+  status: string;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string;
+  version?: number;
+}
+
+export interface PaymentLedger {
+  id: string;
+  org_id: string;
+  booking_id?: string;
+  booking_group_id?: string;
+  amount: number;
+  currency: string;
+  transaction_type: 'advance' | 'installment' | 'final_settlement' | 'refund' | 'vendor_payout';
+  payment_method?: string;
+  reference_id?: string;
+  is_outbound: boolean;
+  status: string;
+  recorded_by?: string;
+  created_at: string;
+}
+
+export interface AuditLog {
+  id: string;
+  org_id: string;
+  entity_type: string;
+  entity_id: string;
+  action: 'CREATE' | 'UPDATE' | 'DELETE';
+  old_data?: Record<string, any>;
+  new_data?: Record<string, any>;
+  actor_id?: string;
+  created_at: string;
 }

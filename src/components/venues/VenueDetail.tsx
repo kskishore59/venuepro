@@ -3,37 +3,11 @@ import type { Venue, Hall } from '../../types';
 import { ArrowLeft, Building, Edit2, Users, Maximize } from 'lucide-react';
 import { HallForm } from './HallForm';
 import { formatCurrency } from '../../lib/utils';
+import { Drawer } from '../ui/Drawer';
 
 export const VenueDetail: React.FC<{ venue: Venue, halls: Hall[], onBack: () => void }> = ({ venue, halls, onBack }) => {
   const [drawerMode, setDrawerMode] = useState<'none' | 'add_hall' | 'edit_hall'>('none');
   const [selectedHall, setSelectedHall] = useState<Hall | null>(null);
-
-  if (drawerMode !== 'none') {
-    return (
-      <div className="absolute inset-0 z-20 bg-white flex flex-col">
-        <div className="flex items-center justify-between px-8 py-4 border-b border-gray-100 bg-white">
-          <div className="flex items-center space-x-4">
-            <button onClick={() => setDrawerMode('none')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <ArrowLeft className="w-5 h-5 text-gray-600" />
-            </button>
-            <div>
-              <h2 className="text-xl font-bold text-gray-900">
-                {drawerMode === 'add_hall' ? `Add Hall to ${venue.name}` : `Edit ${selectedHall?.name}`}
-              </h2>
-              <p className="text-xs text-gray-500 font-medium">Draft - Not published yet</p>
-            </div>
-          </div>
-        </div>
-        <div className="flex-1 overflow-hidden">
-          <HallForm
-            onClose={() => setDrawerMode('none')}
-            venueId={venue.id}
-            initialData={drawerMode === 'edit_hall' && selectedHall ? selectedHall : undefined}
-          />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6 flex flex-col h-full bg-gray-50/30">
@@ -139,6 +113,19 @@ export const VenueDetail: React.FC<{ venue: Venue, halls: Hall[], onBack: () => 
           </div>
         )}
       </div>
+
+      <Drawer
+        isOpen={drawerMode === 'add_hall' || drawerMode === 'edit_hall'}
+        onClose={() => setDrawerMode('none')}
+        title={drawerMode === 'add_hall' ? `Add Hall to ${venue.name}` : `Edit ${selectedHall?.name}`}
+        size="xl"
+      >
+        <HallForm
+          onClose={() => setDrawerMode('none')}
+          venueId={venue.id}
+          initialData={drawerMode === 'edit_hall' && selectedHall ? selectedHall : undefined}
+        />
+      </Drawer>
     </div>
   );
 };

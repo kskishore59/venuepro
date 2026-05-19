@@ -22,11 +22,22 @@ const SuperAdmin = lazy(() => import('./pages/SuperAdmin').then(m => ({ default:
 const Settings = lazy(() => import('./pages/Settings').then(m => ({ default: m.Settings })));
 const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })));
 const DesignSystem = lazy(() => import('./pages/DesignSystem').then(m => ({ default: m.DesignSystem })));
+const NotFound = lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
+
+// New high fidelity modular pages from VenueOS specifications
+const Calendar = lazy(() => import('./pages/Calendar').then(m => ({ default: m.Calendar })));
+const Quotations = lazy(() => import('./pages/Quotations').then(m => ({ default: m.Quotations })));
+const Operations = lazy(() => import('./pages/Operations').then(m => ({ default: m.Operations })));
+const Vendors = lazy(() => import('./pages/Vendors').then(m => ({ default: m.Vendors })));
+const Analytics = lazy(() => import('./pages/Analytics').then(m => ({ default: m.Analytics })));
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 15, // Keep cache for 15 minutes to prevent empty skeletons on back navigation
+      refetchOnWindowFocus: false,
+      refetchOnMount: false, // Only fetch on mount if data is stale/missing
       retry: 1,
     },
   },
@@ -83,6 +94,7 @@ function App() {
               
               <Route element={<DashboardLayout />}>
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/calendar" element={<Calendar />} />
                 <Route path="/bookings" element={<Bookings />} />
                 <Route path="/leads" element={<Leads />} />
                 <Route path="/customers" element={<Customers />} />
@@ -90,11 +102,15 @@ function App() {
                 <Route path="/venues" element={<Venues />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/quotations" element={<Quotations />} />
+                <Route path="/operations" element={<Operations />} />
+                <Route path="/vendors" element={<Vendors />} />
+                <Route path="/analytics" element={<Analytics />} />
                 <Route path="/super-admin" element={<SuperAdminGuard><SuperAdmin /></SuperAdminGuard>} />
                 <Route path="/design-system" element={<DesignSystem />} />
               </Route>
 
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
         </BrowserRouter>

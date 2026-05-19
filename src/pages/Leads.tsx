@@ -9,7 +9,7 @@ import { Drawer } from '../components/ui/Drawer';
 import type { Lead } from '../types';
 import { formatCurrency } from '../lib/utils';
 import { isToday, format } from 'date-fns';
-import { LayoutGrid, List, Phone, Mail, Calendar, Eye, Edit2 } from 'lucide-react';
+import { LayoutGrid, List, Phone, Mail, Calendar, Eye, Edit2, RefreshCcw } from 'lucide-react';
 import { BoardSkeleton, TableSkeleton } from '../components/ui/Skeleton';
 import { SEO } from '../components/ui/SEO';
 import { useSubscription } from '../hooks/useSubscription';
@@ -131,6 +131,14 @@ export const Leads: React.FC = () => {
               <List className="w-4 h-4" />
             </button>
           </div>
+
+          <button
+            onClick={() => queryClient.invalidateQueries({ queryKey: ['leads'] })}
+            className="p-2.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors bg-white shadow-sm"
+            title="Refresh Leads"
+          >
+            <RefreshCcw className="w-4 h-4" />
+          </button>
 
           <button
             onClick={() => {

@@ -10,6 +10,7 @@ import type { Lead } from '../../types';
 
 const EVENT_TYPES = ['wedding', 'reception', 'engagement', 'mehendi', 'haldi', 'sangeet', 'birthday', 'anniversary', 'corporate', 'conference', 'pooja', 'other'] as const;
 const SOURCES = ['WhatsApp', 'Google', 'JustDial', 'Walk-in', 'Referral', 'Instagram', 'Facebook', 'Other'] as const;
+const STATUS_OPTIONS = ['new', 'contacted', 'visit_scheduled', 'proposal_sent', 'negotiating', 'won', 'lost'] as const;
 
 const leadSchema = z.object({
   name: z.string().min(2, 'Name is required'),
@@ -21,6 +22,7 @@ const leadSchema = z.object({
   budget_from: z.coerce.number().optional(),
   budget_to: z.coerce.number().optional(),
   source: z.enum(SOURCES).optional(),
+  status: z.enum(STATUS_OPTIONS).optional(),
   notes: z.string().optional(),
   follow_up_date: z.string().min(1, 'Follow-up date required'),
 });
@@ -42,9 +44,11 @@ export const LeadForm: React.FC<{ onClose: () => void, initialData?: Lead }> = (
       tentative_date: initialData.tentative_date ? initialData.tentative_date.split('T')[0] : '',
       follow_up_date: initialData.follow_up_date ? initialData.follow_up_date.split('T')[0] : tomorrow.toISOString().split('T')[0],
       source: (initialData.source as any) || '',
-      event_type: (initialData.event_type as any) || ''
+      event_type: (initialData.event_type as any) || '',
+      status: (initialData.status as any) || 'new'
     } : {
-      follow_up_date: tomorrow.toISOString().split('T')[0]
+      follow_up_date: tomorrow.toISOString().split('T')[0],
+      status: 'new'
     }
   });
 
@@ -146,6 +150,15 @@ export const LeadForm: React.FC<{ onClose: () => void, initialData?: Lead }> = (
           <label className="block text-sm font-medium text-gray-700">Notes</label>
           <textarea {...register('notes')} rows={3} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border px-3 py-2" />
         </div>
+
+        {initialData && (
+          <div className="col-span-2">
+            <label className="block text-sm font-medium text-gray-700">Lead Status</label>
+            <select {...register('status')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border px-3 py-2 capitalize">
+              {STATUS_OPTIONS.map(s => <option key={s} value={s} className="capitalize">{s.replace('_', ' ')}</option>)}
+            </select>
+          </div>
+        )}
       </div>
 
       <div className="flex justify-end space-x-3 pt-4 border-t">

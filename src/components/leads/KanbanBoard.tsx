@@ -15,13 +15,13 @@ interface KanbanBoardProps {
 }
 
 const COLUMNS = [
-  { id: 'new', title: 'New Inquiry', color: 'bg-gray-100 border-gray-200 text-gray-800' },
-  { id: 'contacted', title: 'Contacted', color: 'bg-blue-100 border-blue-200 text-blue-800' },
-  { id: 'visit_scheduled', title: 'Site Visit', color: 'bg-yellow-100 border-yellow-200 text-yellow-800' },
-  { id: 'proposal_sent', title: 'Proposal Sent', color: 'bg-orange-100 border-orange-200 text-orange-800' },
-  { id: 'negotiating', title: 'Negotiating', color: 'bg-purple-100 border-purple-200 text-purple-800' },
-  { id: 'won', title: 'Won', color: 'bg-green-100 border-green-200 text-green-800' },
-  { id: 'lost', title: 'Lost', color: 'bg-red-100 border-red-200 text-red-800' },
+  { id: 'new', title: 'New Inquiry', color: 'bg-slate-100 border-slate-200 text-slate-800' },
+  { id: 'contacted', title: 'Contacted', color: 'bg-blue-50 border-blue-200 text-blue-800' },
+  { id: 'visit_scheduled', title: 'Site Visit', color: 'bg-yellow-50 border-yellow-200 text-yellow-800' },
+  { id: 'proposal_sent', title: 'Proposal Sent', color: 'bg-orange-50 border-orange-200 text-orange-800' },
+  { id: 'negotiating', title: 'Negotiating', color: 'bg-purple-50 border-purple-200 text-purple-800' },
+  { id: 'won', title: 'Won', color: 'bg-green-50 border-green-200 text-green-800' },
+  { id: 'lost', title: 'Lost', color: 'bg-red-50 border-red-200 text-red-800' },
 ];
 
 interface DroppableColumnProps {
@@ -35,7 +35,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({ id, className, childr
   return (
     <div
       ref={setNodeRef}
-      className={`${className} transition-colors duration-200 ${isOver ? 'bg-primary/5 border border-dashed border-primary/30' : ''}`}
+      className={`${className} transition-all duration-200 ${isOver ? 'bg-[#107ed8]/5 ring-2 ring-inset ring-[#107ed8]/30 rounded-b-lg' : ''}`}
     >
       {children}
     </div>
@@ -104,10 +104,10 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ leads, onLeadMove, onL
         onDragEnd={handleDragEnd}
       >
         {COLUMNS.map(col => (
-          <div key={col.id} className="flex-shrink-0 w-80 flex flex-col bg-gray-50/50 rounded-lg border border-gray-200">
-            <div className={`px-4 py-3 rounded-t-lg border-b font-semibold text-sm flex justify-between items-center ${col.color}`}>
+          <div key={col.id} className="flex-shrink-0 w-80 flex flex-col bg-slate-50/50 rounded-xl border border-slate-200 shadow-sm">
+            <div className={`px-4 py-3 rounded-t-xl border-b font-bold text-xs uppercase tracking-wider flex justify-between items-center ${col.color}`}>
               {col.title}
-              <span className="bg-white/50 px-2 py-0.5 rounded-full text-xs">{columnsWithLeads[col.id].length}</span>
+              <span className="bg-white/60 px-2 py-0.5 rounded-md text-xs">{columnsWithLeads[col.id].length}</span>
             </div>
 
             <DroppableColumn id={col.id} className="flex-1 p-3 overflow-y-auto">

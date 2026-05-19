@@ -6,29 +6,58 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 240 10% 99%;
     --foreground: 222.2 84% 4.9%;
+    /* Charcoal */
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 207 85% 46%; /* #107ed8 */
+
+    /* Premium deep charcoal primary */
+    --primary: 222.2 47.4% 11.2%;
+    /* #111827 */
     --primary-foreground: 210 40% 98%;
+
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
+
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 221 83% 53%; /* #2563EB */
-    --accent-foreground: 210 40% 98%;
+
+    --accent: 210 40% 95%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221 83% 53%;
+    --ring: 37.7 50.1% 56.1%;
+    /* Royal Gold */
     --radius: 0.5rem;
-    
+
+    /* Branding Colors */
+    --brand: #107ed8;
+    --brand-foreground: #ffffff;
+    --gold: #C5A059;
+    --gold-foreground: #111827;
+
+    /* Shadows */
+    --shadow-ambient: 0 4px 20px rgba(0, 0, 0, 0.04);
+    --shadow-elevated: 0 12px 32px rgba(0, 0, 0, 0.08);
+
     /* Global programmatic style custom properties */
-    --global-font: 'Outfit', 'Inter', sans-serif;
+    --global-font: 'Plus Jakarta Sans', 'Inter', sans-serif;
+
+    /* Sidebar Variables (always dark, matching VenueOS design) */
+    --sidebar-background: 224 71% 4%;
+    --sidebar-foreground: 215 20.2% 80%;
+    --sidebar-primary: 38 72% 50%;
+    --sidebar-primary-foreground: 224 71% 4%;
+    --sidebar-accent: 215 25% 12%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 215 25% 10%;
+    --sidebar-ring: 37.7 50.1% 56.1%;
   }
 
   .dark {
@@ -50,17 +79,46 @@
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 37.7 50.1% 56.1%;
+
+    --brand: #3a9bea;
+    --gold: #dfba74;
+
+    /* Sidebar Variables Dark Mode */
+    --sidebar-background: 222.2 84% 4.9%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 210 40% 98%;
+    --sidebar-primary-foreground: 222.2 47.4% 11.2%;
+    --sidebar-accent: 217.2 32.6% 17.5%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217.2 32.6% 17.5%;
+    --sidebar-ring: 210 40% 98%;
   }
 }
 
 @layer base {
+  html {
+    font-size: 108.5%;
+    /* Global scaling to increase readability of smaller texts */
+  }
+
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--global-font);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    letter-spacing: -0.02em;
   }
 }
 
@@ -68,6 +126,7 @@
 .premium-datepicker-popper {
   z-index: 9999 !important;
 }
+
 .premium-datepicker-popper .react-datepicker {
   font-family: inherit;
   border-radius: 12px;
@@ -76,33 +135,162 @@
   overflow: hidden;
   background-color: #fff;
 }
+
 .premium-datepicker-popper .react-datepicker__header {
   background-color: #f8fafc;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   padding-top: 10px;
 }
+
 .premium-datepicker-popper .react-datepicker__current-month {
   font-weight: 700;
   color: #1e293b;
   font-size: 0.95rem;
 }
+
 .premium-datepicker-popper .react-datepicker__day-name {
   color: #64748b;
   font-weight: 600;
 }
+
 .premium-datepicker-popper .react-datepicker__day--selected {
   background-color: #107ed8 !important;
   color: #fff !important;
   border-radius: 8px;
 }
+
 .premium-datepicker-popper .react-datepicker__day:hover {
   border-radius: 8px;
   background-color: rgba(16, 126, 216, 0.1);
   color: #107ed8;
 }
+
 .premium-datepicker-popper .react-datepicker__day--keyboard-selected {
   border-radius: 8px;
   background-color: rgba(16, 126, 216, 0.05);
+}
+
+/* Expressive hover, clicks, transitions and animations */
+.lift-on-hover {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease;
+}
+
+.lift-on-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevated);
+}
+
+.pressable {
+  transition: transform 0.15s ease;
+}
+
+.pressable:active {
+  transform: scale(0.97);
+}
+
+@keyframes page-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: page-fade-up 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes float-slow {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+
+.marquee-mask {
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+/* Premium CTA buttons */
+.btn-brand {
+  background-color: var(--brand);
+  color: var(--brand-foreground);
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, background-color 0.2s ease;
+  box-shadow: 0 6px 20px -8px rgba(16, 126, 216, 0.5);
+  font-weight: 700;
+}
+
+.btn-brand:hover {
+  background-color: #0d6dbb;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px -10px rgba(16, 126, 216, 0.6);
+}
+
+.btn-brand:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-outline-brand {
+  border: 1px solid rgba(16, 126, 216, 0.35);
+  color: var(--brand);
+  background: transparent;
+  transition: all 0.2s ease;
+  font-weight: 700;
+}
+
+.btn-outline-brand:hover {
+  background: rgba(16, 126, 216, 0.08);
+  border-color: var(--brand);
+}
+
+.bg-dotted {
+  background-image: radial-gradient(rgba(17, 24, 39, 0.08) 1px, transparent 1px);
+  background-size: 22px 22px;
 }
 
 /* Premium card hover & shadow utilities */
@@ -111,27 +299,33 @@
     @apply bg-white rounded-xl border border-gray-200/80 shadow-sm;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
   .card-elevated:hover {
     @apply shadow-lg border-primary/15;
     transform: translateY(-2px);
   }
+
   .card-interactive {
     @apply bg-white rounded-xl border border-gray-200/80 shadow-sm cursor-pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
   .card-interactive:hover {
     @apply shadow-xl border-primary/25;
     transform: translateY(-3px) scale(1.005);
   }
+
   .btn-primary {
     @apply bg-primary text-white font-bold rounded-lg shadow-md shadow-primary/20;
     transition: all 0.2s ease;
   }
+
   .btn-primary:hover {
     @apply shadow-lg shadow-primary/30;
     filter: brightness(1.08);
     transform: translateY(-1px);
   }
+
   .btn-primary:active {
     transform: translateY(0) scale(0.98);
   }

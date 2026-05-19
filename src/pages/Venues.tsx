@@ -83,7 +83,7 @@ export const Venues: React.FC = () => {
               <div
                 key={venue.id}
                 onClick={() => setSelectedVenue(venue)}
-                className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-all cursor-pointer group"
+                className="bg-white rounded-xl border border-gray-155 shadow-sm overflow-hidden hover:shadow-md hover:border-primary/40 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group"
               >
                 <div className="h-48 bg-gray-200 relative overflow-hidden">
                   {venue.primary_photo ? (

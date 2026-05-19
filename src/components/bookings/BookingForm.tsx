@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
+import { api } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'sonner';
 import { CustomDatePicker, CustomTimePicker } from '../ui/DateTimePicker';
@@ -129,30 +130,22 @@ export const BookingForm: React.FC<{
       }
 
       if (bookingId) {
-        // Update booking
-        const { data: updatedBooking, error } = await supabase
-          .from('bookings')
-          .update({
+        // Fetch current version for OCC
+        const { data: currentRec } = await supabase.from('bookings').select('version').eq('id', bookingId).single();
+        // Update booking with OCC
+        const updatedBooking = await api.updateWithOCC('bookings', bookingId, currentRec?.version || 1, {
             ...data,
             balance_amount: data.total_amount - data.advance_amount,
-          })
-          .eq('id', bookingId)
-          .select()
-          .single();
-
-        if (error) throw error;
+        });
         return updatedBooking;
       } else {
-        // Create booking
-        const { data: newBooking, error } = await supabase.from('bookings').insert({
+        // Create booking using dual-write helper
+        const newBooking = await api.createBooking({
           ...data,
           balance_amount: data.total_amount - data.advance_amount,
           org_id: organization!.id,
-          status: 'inquiry',
-          booking_number: `BKG-${Math.floor(Math.random() * 10000)}` // Mock sequence
-        }).select().single();
-
-        if (error) throw error;
+          status: 'hold'
+        });
         return newBooking;
       }
     },

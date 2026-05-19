@@ -3,6 +3,9 @@ import type { Booking } from '../../types';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, addMonths, subMonths, startOfWeek, endOfWeek, isSameMonth } from 'date-fns';
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { DndContext, useDroppable, useDraggable, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import type { DragEndEvent } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
 
 interface BookingCalendarProps {
   bookings: Booking[];
@@ -10,6 +13,7 @@ interface BookingCalendarProps {
   setCurrentDate: (date: Date) => void;
   onDateClick: (date: Date) => void;
   onBookingClick: (booking: Booking) => void;
+  onBookingMove?: (bookingId: string, newDate: Date) => void;
 }
 
 const statusColors: Record<string, string> = {
@@ -33,7 +37,8 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
   currentDate, 
   setCurrentDate, 
   onDateClick, 
-  onBookingClick 
+  onBookingClick,
+  onBookingMove
 }) => {
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -56,8 +61,29 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
     setCurrentDate(nextDate);
   };
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || !onBookingMove) return;
+
+    const bookingId = active.id as string;
+    const dateStr = over.id as string;
+    const newDate = new Date(dateStr);
+
+    onBookingMove(bookingId, newDate);
+  };
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5, // Requires 5px movement before dragging starts, allowing onClick to fire
+      },
+    }),
+    useSensor(KeyboardSensor)
+  );
+
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col h-full">
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col h-full">
       
       {/* Header controls with Month & Year Selectors */}
       <div className="flex flex-col sm:flex-row items-center justify-between p-4 border-b border-gray-150 gap-4 bg-gray-50/20">
@@ -125,14 +151,12 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
           const dayBookings = bookings.filter(b => isSameDay(new Date(b.event_date), day));
           
           return (
-            <div 
+            <DroppableDay 
               key={day.toISOString()} 
-              className={cn(
-                "p-1.5 cursor-pointer hover:bg-gray-50/60 transition-all min-h-[75px] flex flex-col justify-between group", 
-                !isCurrentMonth && "bg-gray-50/40 opacity-45 pointer-events-none",
-                isTodayDate && "bg-blue-50/20"
-              )}
-              onClick={() => isCurrentMonth && onDateClick(day)}
+              day={day}
+              isCurrentMonth={isCurrentMonth}
+              isTodayDate={isTodayDate}
+              onDateClick={onDateClick}
             >
               {/* Date Badge */}
               <div className="flex justify-between items-center">
@@ -157,18 +181,11 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
               {/* Day slots list */}
               <div className="mt-1 flex flex-col gap-0.5 overflow-hidden flex-1 max-h-[70px]">
                 {isCurrentMonth && dayBookings.slice(0, 3).map(booking => (
-                  <div
-                    key={booking.id}
-                    onClick={(e) => { e.stopPropagation(); onBookingClick(booking); }}
-                    className={cn(
-                      "text-[10px] px-1 py-0.5 rounded border font-semibold truncate cursor-pointer transition-all shadow-sm", 
-                      statusColors[booking.status] || statusColors.inquiry
-                    )}
-                    title={`${booking.customers?.name || 'Walk-in'} - ${booking.halls?.name || 'Main space'}`}
-                  >
-                    <span className="font-bold mr-1">{booking.start_time?.slice(0, 5)}</span>
-                    {booking.customers?.name?.split(' ')[0]}
-                  </div>
+                  <DraggableBooking 
+                    key={booking.id} 
+                    booking={booking} 
+                    onBookingClick={onBookingClick} 
+                  />
                 ))}
                 
                 {isCurrentMonth && dayBookings.length > 3 && (
@@ -177,11 +194,76 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
                   </div>
                 )}
               </div>
-            </div>
+            </DroppableDay>
           );
         })}
       </div>
     </div>
+    </DndContext>
   );
 };
+
+// --- DnD Sub-components ---
+
+const DroppableDay: React.FC<{
+  day: Date;
+  isCurrentMonth: boolean;
+  isTodayDate: boolean;
+  onDateClick: (day: Date) => void;
+  children: React.ReactNode;
+}> = ({ day, isCurrentMonth, isTodayDate, onDateClick, children }) => {
+  const { isOver, setNodeRef } = useDroppable({
+    id: day.toISOString()
+  });
+
+  return (
+    <div 
+      ref={setNodeRef}
+      className={cn(
+        "p-1.5 cursor-pointer hover:bg-gray-50/60 transition-all min-h-[75px] flex flex-col justify-between group", 
+        !isCurrentMonth && "bg-gray-50/40 opacity-45 pointer-events-none",
+        isTodayDate && "bg-blue-50/20",
+        isOver && "bg-[#107ed8]/10 ring-2 ring-inset ring-[#107ed8]/30"
+      )}
+      onClick={() => isCurrentMonth && onDateClick(day)}
+    >
+      {children}
+    </div>
+  );
+};
+
+const DraggableBooking: React.FC<{
+  booking: Booking;
+  onBookingClick: (booking: Booking) => void;
+}> = ({ booking, onBookingClick }) => {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: booking.id,
+    data: booking
+  });
+
+  const style = transform ? {
+    transform: CSS.Translate.toString(transform),
+    zIndex: isDragging ? 50 : 1,
+    opacity: isDragging ? 0.8 : 1,
+  } : undefined;
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      onClick={(e) => { e.stopPropagation(); onBookingClick(booking); }}
+      className={cn(
+        "text-[10px] px-1 py-0.5 rounded border font-semibold truncate cursor-grab active:cursor-grabbing transition-all shadow-sm", 
+        statusColors[booking.status] || statusColors.inquiry
+      )}
+      title={`${booking.customers?.name || 'Walk-in'} - ${booking.halls?.name || 'Main space'}`}
+    >
+      <span className="font-bold mr-1">{booking.start_time?.slice(0, 5)}</span>
+      {booking.customers?.name?.split(' ')[0]}
+    </div>
+  );
+};
+
 export default BookingCalendar;

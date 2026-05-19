@@ -3,31 +3,28 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { BookingCalendar } from '../components/bookings/BookingCalendar';
-import { BookingList } from '../components/bookings/BookingList';
 import { Drawer } from '../components/ui/Drawer';
 import { BookingForm } from '../components/bookings/BookingForm';
-import { BookingGroupForm } from '../components/bookings/BookingGroupForm';
 import { BookingDetail } from '../components/bookings/BookingDetail';
 import type { Booking } from '../types';
 import { Skeleton } from '../components/ui/Skeleton';
 import { SEO } from '../components/ui/SEO';
 import { useSubscription } from '../hooks/useSubscription';
 import { toast } from 'sonner';
-import { RefreshCcw } from 'lucide-react';
+import { RefreshCcw, Calendar as CalendarIcon } from 'lucide-react';
 
-export const Bookings: React.FC = () => {
+export const Calendar: React.FC = () => {
   const { organization } = useAuth();
   const { subInfo } = useSubscription();
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const [drawerMode, setDrawerMode] = useState<'none' | 'create' | 'createGroup' | 'view' | 'edit'>('none');
+  const [drawerMode, setDrawerMode] = useState<'none' | 'create' | 'view' | 'edit'>('none');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const queryClient = useQueryClient();
 
   const moveBooking = useMutation({
     mutationFn: async ({ bookingId, newDate }: { bookingId: string, newDate: string }) => {
-      // Find the booking to get its version for OCC
       const booking = bookings.find(b => b.id === bookingId);
       if (!booking) throw new Error("Booking not found");
       
@@ -40,7 +37,7 @@ export const Bookings: React.FC = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
-      toast.success("Booking moved successfully.");
+      toast.success("Booking rescheduled successfully.");
     },
     onError: (error: any) => {
       toast.error(`Failed to move booking: ${error.message}`);
@@ -89,21 +86,20 @@ export const Bookings: React.FC = () => {
         </div>
         <Skeleton className="h-10 w-32" />
       </div>
-      <Skeleton className="h-[450px] w-full" />
-      <Skeleton className="h-[150px] w-full" />
+      <Skeleton className="h-[550px] w-full" />
     </div>
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 flex flex-col h-full">
       <SEO
-        title="Bookings"
-        description="Manage your banquet bookings, coordinate venue dates, process deposits, and preview client event layouts."
+        title="Interactive Calendar"
+        description="Synchronized drag-and-drop banquet scheduler with real-time conflict checking."
       />
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-xl border border-gray-150 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
         <div>
-          <h1 className="text-lg md:text-2xl font-bold text-gray-900 tracking-tight">Bookings & Calendar</h1>
-          <p className="text-gray-500 text-xs md:text-sm mt-0.5">Manage your hall bookings, events, and schedules.</p>
+          <h1 className="text-lg md:text-2xl font-bold text-gray-900 tracking-tight">Interactive Calendar</h1>
+          <p className="text-gray-500 text-xs md:text-sm mt-0.5">Drag-and-drop bookings to reschedule. Conflict check happens in real-time.</p>
         </div>
         <div className="flex w-full sm:w-auto space-x-2">
           <button
@@ -116,33 +112,20 @@ export const Bookings: React.FC = () => {
           <button
             onClick={() => {
               if (subInfo.isLocked) {
-                toast.error("Account locked: Please renew your subscription in settings to add bookings.");
-                return;
-              }
-              setSelectedDate(new Date());
-              setDrawerMode('createGroup');
-            }}
-            className="flex-1 sm:flex-none px-4 py-2.5 bg-slate-100 text-slate-700 border border-slate-200 rounded-lg hover:bg-slate-200 transition-colors shadow-sm font-bold text-xs md:text-sm text-center"
-          >
-            + Multi-Event Group
-          </button>
-          <button
-            onClick={() => {
-              if (subInfo.isLocked) {
-                toast.error("Account locked: Please renew your subscription in settings to add bookings.");
+                toast.error("Account locked: Please renew your subscription to add bookings.");
                 return;
               }
               setSelectedDate(new Date());
               setDrawerMode('create');
             }}
-            className="flex-1 sm:flex-none px-4 py-2.5 bg-[#107ed8] text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm font-bold text-xs md:text-sm text-center"
+            className="px-4 py-2.5 bg-[#107ed8] text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm font-bold text-xs md:text-sm flex items-center"
           >
-            + New Booking
+            <CalendarIcon className="w-4 h-4 mr-2" /> New Hold/Booking
           </button>
         </div>
       </div>
 
-      <div className="h-[460px] md:h-[600px]">
+      <div className="flex-1 bg-white rounded-xl border border-gray-250 shadow-sm p-4 overflow-hidden min-h-[500px]">
         <BookingCalendar
           bookings={bookings}
           currentDate={currentDate}
@@ -152,8 +135,6 @@ export const Bookings: React.FC = () => {
           onBookingMove={handleBookingMove}
         />
       </div>
-
-      <BookingList bookings={bookings} onBookingClick={handleBookingClick} />
 
       <Drawer
         isOpen={drawerMode === 'create' || drawerMode === 'edit'}
@@ -177,32 +158,17 @@ export const Bookings: React.FC = () => {
             total_amount: activeBooking.total_amount,
             advance_amount: activeBooking.advance_amount,
             special_requirements: activeBooking.special_requirements || '',
-            internal_notes: activeBooking.internal_notes || '',
+            internal_notes: activeBooking.internal_notes || ''
           } : undefined}
-          onClose={() => {
-            if (drawerMode === 'edit') setDrawerMode('view');
-            else setDrawerMode('none');
-          }}
-        />
-      </Drawer>
-
-      <Drawer
-        isOpen={drawerMode === 'createGroup'}
-        onClose={() => setDrawerMode('none')}
-        title="Create Multi-Event Group"
-        size="lg"
-      >
-        <BookingGroupForm
-          initialDate={selectedDate}
           onClose={() => setDrawerMode('none')}
         />
       </Drawer>
 
       <Drawer
         isOpen={drawerMode === 'view'}
-        onClose={() => { setDrawerMode('none'); setSelectedBooking(null); }}
+        onClose={() => setDrawerMode('none')}
         title="Booking Details"
-        size="xl"
+        size="lg"
       >
         {activeBooking && (
           <BookingDetail
@@ -214,4 +180,3 @@ export const Bookings: React.FC = () => {
     </div>
   );
 };
-export default Bookings;

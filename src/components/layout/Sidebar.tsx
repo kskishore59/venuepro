@@ -1,106 +1,127 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { 
-  Home, Calendar, Users, UserCheck, CreditCard, 
-  Building, BarChart, Settings, LogOut, ShieldAlert, Palette, X
+import { NavLink, useLocation } from 'react-router-dom';
+import {
+  Home, Calendar, Users, UserCheck, CreditCard,
+  Building, Settings, LogOut, ShieldAlert, Palette,
+  BarChart, FileText, ClipboardList, Truck, CheckSquare
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../context/AuthContext';
-
-interface SidebarProps {
-  collapsed?: boolean;
-  onClose?: () => void;
-}
+import {
+  Sidebar as ShadcnSidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem
+} from '../ui/sidebar';
 
 const navItems = [
   { icon: Home, label: 'Dashboard', path: '/dashboard' },
-  { icon: Calendar, label: 'Calendar & Bookings', path: '/bookings' },
-  { icon: Users, label: 'Leads & CRM', path: '/leads', badge: 3 },
+  { icon: Calendar, label: 'Calendar', path: '/calendar' },
+  { icon: Users, label: 'Leads', path: '/leads', badge: 3 },
+  { icon: Building, label: 'Venues', path: '/venues' },
+  { icon: CheckSquare, label: 'Bookings', path: '/bookings' },
+  { icon: FileText, label: 'Quotations', path: '/quotations' },
+  { icon: CreditCard, label: 'Finance', path: '/payments' },
+  { icon: ClipboardList, label: 'Operations', path: '/operations' },
+  { icon: Truck, label: 'Vendors', path: '/vendors' },
   { icon: UserCheck, label: 'Customers', path: '/customers' },
-  { icon: CreditCard, label: 'Payments', path: '/payments' },
-  { icon: Building, label: 'Venues & Halls', path: '/venues' },
-  { icon: BarChart, label: 'Reports', path: '/reports' },
-  { icon: Settings, label: 'Settings', path: '/settings' },
+  { icon: BarChart, label: 'Analytics', path: '/analytics' },
   { icon: Palette, label: 'Design System', path: '/design-system' },
 ];
 
-export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
-  const { organization, profile, signOut } = useAuth();
+export const Sidebar: React.FC = () => {
+  const { profile, signOut } = useAuth();
+  const location = useLocation();
 
   return (
-    <div className={cn(
-      "flex flex-col bg-primary text-primary-foreground transition-all duration-300 h-full shadow-2xl md:shadow-none w-64 border-r border-primary-foreground/10"
-    )}>
-      {/* Header section with brand and Close action button for mobile viewports */}
-      <div className="flex items-center justify-between p-4 border-b border-primary-foreground/20 h-16 shrink-0">
-        <div className="flex items-center">
-          <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center shrink-0">
-            <span className="font-bold text-sm">{organization?.name?.charAt(0) || 'V'}</span>
+    <ShadcnSidebar>
+      {/* Header section with brand logo and name */}
+      <SidebarHeader className="border-b border-sidebar-border px-5 h-16 flex items-start shrink-0 pt-6">
+        <div className="flex flex-row items-center space-x-3">
+          <div className="w-8 h-8 rounded-lg bg-[#dfba74] text-[#0b0f19] flex items-center justify-center shrink-0 shadow-md transition-transform duration-300 hover:scale-105">
+            <span className="font-extrabold text-md tracking-tighter">V</span>
           </div>
-          <div className="ml-3 overflow-hidden text-left">
-            <p className="font-bold truncate text-sm">{organization?.name || 'VenuePro'}</p>
-            <p className="text-[10px] text-primary-foreground/75 truncate">{profile?.full_name}</p>
-          </div>
+          <span className="font-bold text-lg text-sidebar-foreground tracking-tight group-data-[collapsible=icon]:hidden">VenueOS</span>
         </div>
-
-        {/* Close Button on Mobile Drawer */}
-        {onClose && (
-          <button 
-            onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-primary-foreground/10 text-primary-foreground/80 md:hidden transition-colors"
-            aria-label="Close sidebar"
-          >
-            <X className="w-4.5 h-4.5" />
-          </button>
-        )}
-      </div>
+      </SidebarHeader>
 
       {/* Navigation Options */}
-      <nav className="flex-1 overflow-y-auto py-4">
-        <ul className="space-y-1 px-2">
+      <SidebarContent className="py-4">
+        <SidebarMenu className="px-2">
           {[
             ...navItems,
-            ...((profile?.role as string) === 'super_admin' ? [{ icon: ShieldAlert, label: 'Super Admin', path: '/super-admin' }] : [])
-          ].map((item) => (
-            <li key={item.path}>
-              <NavLink
-                to={item.path}
-                onClick={onClose}
-                className={({ isActive }) => cn(
-                  "flex items-center px-3 py-2.5 rounded-md transition-colors text-sm",
-                  "hover:bg-primary-foreground/10",
-                  isActive ? "bg-primary-foreground/20 text-white font-semibold" : "text-primary-foreground/80"
-                )}
-              >
-                <item.icon className="w-5 h-5 shrink-0" />
-                <span className="ml-3 flex-1 flex items-center justify-between font-medium">
-                  {item.label}
-                  {item.badge && (
-                    <span className="bg-accent text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                      {item.badge}
+            ...((profile?.role as string) === 'super_admin' ? [{ icon: ShieldAlert, label: 'Super Admin', path: '/super-admin' }] : []),
+          ].map((item) => {
+            const isActive = location.pathname === item.path || (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
+            return (
+              <SidebarMenuItem key={item.path} className="list-none">
+                <SidebarMenuButton asChild tooltip={item.label} isActive={isActive}>
+                  <NavLink
+                    to={item.path}
+                    className={cn(
+                      "group flex items-center w-full px-4 py-2.5 transition-all duration-300 text-sm font-semibold border-l-2 rounded-r-lg rounded-l-none",
+                      isActive
+                        ? "!bg-[#dfba74]/10 !text-[#dfba74] border-l-[#dfba74] font-bold pl-4 shadow-sm"
+                        : "text-sidebar-foreground/75 hover:bg-sidebar-accent/40 hover:text-[#dfba74] border-l-transparent pl-3.5"
+                    )}
+                  >
+                    <item.icon className="w-4.5 h-4.5 shrink-0 transition-transform duration-300 group-hover:scale-110" />
+                    <span className="ml-3 flex-1 flex items-center justify-between group-data-[collapsible=icon]:hidden">
+                      {item.label}
+                      {item.badge && (
+                        <span className="bg-[#b45309] text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full transition-transform duration-300 group-hover:scale-105">
+                          {item.badge}
+                        </span>
+                      )}
                     </span>
-                  )}
-                </span>
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </nav>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
+        </SidebarMenu>
+      </SidebarContent>
 
-      {/* Footer signout options */}
-      <div className="p-4 border-t border-primary-foreground/20 shrink-0">
-        <button
-          onClick={() => {
-            if (onClose) onClose();
-            signOut();
-          }}
-          className="flex items-center w-full px-3 py-2 text-primary-foreground/85 hover:text-white hover:bg-primary-foreground/10 rounded-md transition-colors text-sm font-semibold"
-        >
-          <LogOut className="w-5 h-5 shrink-0" />
-          <span className="ml-3 text-left">Sign Out</span>
-        </button>
-      </div>
-    </div>
+      {/* Footer Settings & signout options */}
+      <SidebarFooter className="border-t border-sidebar-border p-4 shrink-0 space-y-1">
+        <SidebarMenuItem className="list-none">
+          {(() => {
+            const isSettingsActive = location.pathname.startsWith('/settings');
+            return (
+              <SidebarMenuButton asChild tooltip="Settings" isActive={isSettingsActive}>
+                <NavLink
+                  to="/settings"
+                  className={cn(
+                    "group flex items-center w-full px-4 py-2 transition-all duration-300 text-sm font-semibold border-l-2 rounded-r-lg rounded-l-none",
+                    isSettingsActive
+                      ? "!bg-[#dfba74]/10 !text-[#dfba74] border-l-[#dfba74] font-bold pl-4 shadow-sm"
+                      : "text-sidebar-foreground/75 hover:bg-sidebar-accent/40 hover:text-[#dfba74] border-l-transparent pl-3.5"
+                  )}
+                >
+                  <Settings className="w-4.5 h-4.5 shrink-0 transition-transform duration-300 group-hover:scale-110" />
+                  <span className="ml-3 group-data-[collapsible=icon]:hidden">Settings</span>
+                </NavLink>
+              </SidebarMenuButton>
+            );
+          })()}
+        </SidebarMenuItem>
+
+        <SidebarMenuItem className="list-none">
+          <SidebarMenuButton asChild tooltip="Sign Out">
+            <button
+              onClick={() => signOut()}
+              className="group flex items-center w-full px-4 py-2 text-sidebar-foreground/75 hover:bg-sidebar-accent/40 hover:text-[#dfba74] border-l-2 border-l-transparent pl-3.5 rounded-lg transition-all duration-300 text-sm font-semibold"
+            >
+              <LogOut className="w-4.5 h-4.5 shrink-0 transition-transform duration-300 group-hover:scale-110" />
+              <span className="ml-3 text-left group-data-[collapsible=icon]:hidden">Sign Out</span>
+            </button>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarFooter>
+    </ShadcnSidebar>
   );
 };
 export default Sidebar;
