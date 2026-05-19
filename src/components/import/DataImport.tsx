@@ -223,38 +223,38 @@ export const DataImport: React.FC<DataImportProps> = ({ type, onClose }) => {
           }
 
           // Upsert customer
-          let customerId: string;
-          const { data: existingCustomer } = await supabase
-            .from("customers")
-            .select("id")
-            .eq("org_id", organization.id)
-            .eq("phone", String(row.customer_phone).trim())
-            .limit(1);
+          // let customerId: string;
+          // const { data: existingCustomer } = await supabase
+          //   .from("customers")
+          //   .select("id")
+          //   .eq("org_id", organization.id)
+          //   .eq("phone", String(row.customer_phone).trim())
+          //   .limit(1);
 
-          if (existingCustomer && existingCustomer.length > 0) {
-            customerId = existingCustomer[0].id;
-          } else {
-            const { data: newCustomer, error: custErr } = await supabase
-              .from("customers")
-              .insert({
-                org_id: organization.id,
-                name: String(row.customer_name).trim(),
-                phone: String(row.customer_phone).trim(),
-                email: row.customer_email
-                  ? String(row.customer_email).trim()
-                  : null,
-              })
-              .select("id")
-              .single();
+          // if (existingCustomer && existingCustomer.length > 0) {
+          //   customerId = existingCustomer[0].id;
+          // } else {
+          //   const { data: newCustomer, error: custErr } = await supabase
+          //     .from("customers")
+          //     .insert({
+          //       org_id: organization.id,
+          //       name: String(row.customer_name).trim(),
+          //       phone: String(row.customer_phone).trim(),
+          //       email: row.customer_email
+          //         ? String(row.customer_email).trim()
+          //         : null,
+          //     })
+          //     .select("id")
+          //     .single();
 
-            if (custErr || !newCustomer) {
-              errors.push(
-                `Row ${i + 2}: Failed to create customer - ${custErr?.message}`,
-              );
-              continue;
-            }
-            customerId = newCustomer.id;
-          }
+          //   if (custErr || !newCustomer) {
+          //     errors.push(
+          //       `Row ${i + 2}: Failed to create customer - ${custErr?.message}`,
+          //     );
+          //     continue;
+          //   }
+          //   customerId = newCustomer.id;
+          // }
 
           const validStatuses = [
             "inquiry",
